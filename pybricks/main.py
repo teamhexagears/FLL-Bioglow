@@ -18,6 +18,7 @@ while True:
 
     robot.hub.light.off()
     if selected == 1:
+        run_task(robot.attachment_reset(380))
         m1(robot)
     elif selected == 2:
         m2(robot)
