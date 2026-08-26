@@ -1,3 +1,6 @@
+if __name__ == "__main__":
+    import main
+
 from umath import atan2, sqrt
 from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor
@@ -11,14 +14,14 @@ class Robot:
         self.left_motor = Motor(Port.F, Direction.COUNTERCLOCKWISE)
         self.right_motor = Motor(Port.B, Direction.CLOCKWISE)
         self.right_attachment = Motor(Port.A, Direction.CLOCKWISE, [20, 12])
-        self.left_attachment = Motor(Port.D, Direction.CLOCKWISE, [20, 20])
+        self.left_attachment = Motor(Port.D, Direction.CLOCKWISE, [20, 12])
         self.drive_base = DriveBase(self.left_motor, self.right_motor, wheel_diameter=62, axle_track=140)
         self.left_color = ColorSensor(Port.E)
         self.right_color = ColorSensor(Port.C)
         self.drive_base.use_gyro(True)
         self.drive_base.settings(150, 300, 200, 325)
-        self.left_color.detectable_colors([Color.WHITE, Color.NONE])
-        self.right_color.detectable_colors([Color.WHITE, Color.NONE])
+        #self.left_color.detectable_colors([Color.WHITE, Color.BLACK])
+        #self.right_color.detectable_colors([Color.WHITE, Color.BLACK])
 
 # function
 
@@ -66,66 +69,79 @@ class Robot:
     def move_till_line(self, speed=50):
         # Start moving forward
         self.drive_base.drive(speed, 0)
-        self.drive_base.stop()
         
         # State tracking: 0 = searching for white, 1 = searching for black, 2 = done
         l_state = 0
         r_state = 0
 
-        
+        counter = 0
         while True:
+            wait(50)
+            l_color = self.left_color.color()
+            r_color = self.right_color.color()
             # check left color sensor state
-            if self.left_color.color() == Color.WHITE:
+            if l_state == 0 and l_color == Color.WHITE:
                 l_state = 1
-            elif l_state == 1 and self.left_color.color() == Color.NONE:
+            elif l_state == 1 and l_color == Color.WHITE:
                 l_state = 2
+            elif l_state == 2 and l_color == Color.NONE:
+                l_state = 3
                 self.drive_base.stop()
             else:
                 l_state = 0
 
             # check right color sensor state
-            if self.right_color.color() == Color.WHITE:
+            if r_state == 0 and r_color == Color.WHITE:
                 r_state = 1
-            elif r_state == 1 and self.right_color.color() == Color.NONE:
+            elif r_state == 1 and r_color == Color.WHITE:
                 r_state = 2
+            elif r_state == 2 and r_color == Color.NONE:
+                r_state = 3
                 self.drive_base.stop()
             else:
                 r_state = 0
-            print("right: " + str(self.right_color.color()))
-            print("left: " + str(self.left_color.color()))
 
-            
+            print("right: " + str(r_color) + " | " + str(r_state))
+            print("left: " + str(l_color) + " | " + str(l_state))
+
             # If left sensor finishes first
             if l_state == 2:
+                print("Turning left...")
                 self.drive_base.stop()
                 self.drive_base.drive(0, -30) # Slowly turn clockwise to align right sensor
                 while r_state < 2:
-                    if self.right_color.color() == Color.WHITE:
+                    wait(50)
+                    r_color = self.right_color.color()
+                    if r_state == 0 and r_color == Color.WHITE:
                         r_state = 1
-                    elif r_state == 1 and self.right_color.color() == Color.NONE:
+                    elif r_state == 1 and r_color == Color.NONE:
                         r_state = 2
                     else:
                         r_state = 0
+                    print("adjust right: " + str(r_color) + " | " + str(r_state))
 
             # If right sensor finishes first
             elif r_state == 2:
+                print("Turning right...")
                 self.drive_base.stop()
                 self.drive_base.drive(0, 30) # Slowly turn counter-clockwise to align left sensor
                 while l_state < 2:
-                    if self.left_color.color() == Color.WHITE:
+                    wait(100)
+                    l_color = self.left_color.color()
+                    if l_state == 0 and l_color == Color.WHITE:
                        l_state = 1
-                    elif l_state == 1 and self.left_color.color() == Color.NONE:
+                    elif l_state == 1 and l_color == Color.NONE:
                         l_state = 2
                     else:
                         l_state = 0
+                    print("adjust left: " + str(l_color) + " | " + str(l_state))
 
             # exit condition
             if l_state == 2 and r_state == 2:
                 break
         wait(10)
+        print("Both sensors detected the line. Stopping.")
         self.drive_base.stop()
-
-        
 
     def curve_move(self, speed, straight_distance, turn_distance):
         print('1')
@@ -158,13 +174,51 @@ class Robot:
         self.drive_base.stop()
 
     def right_attachment_turn(self, angle, speed=300):
-        self.right_attachment.run_angle(speed, angle)
+        self.right_attachment.run_angle(speed, angle * self.right_gear_ratio, then=Stop.HOLD)
 
     def left_attachment_turn(self, angle, speed=300):
-        self.left_attachment.run_angle(speed, angle)
+        self.left_attachment.run_angle(speed, angle * self.left_gear_ratio, then=Stop.HOLD)
+
+    async def attachment_reset(self, move_distance):
+        await multitask(
+            self.right_attachment_reset(),
+            self.left_attachment_reset(),
+            self.parallel_move(move_distance)
+        )
 
     async def right_attachment_reset(self):
-        await self.right_attachment.run_until_stalled(700, duty_limit=40)
+        await self.right_attachment.run_until_stalled(1000, duty_limit=40)
 
     async def left_attachment_reset(self):
-        await self.left_attachment.run_until_stalled(700, duty_limit=40)
+        await self.left_attachment.run_until_stalled(-1000, duty_limit=40)
+
+    async def parallel_left_attachment_turn(self, angle, speed=300):
+        await self.left_attachment.run_angle(speed, angle * self.left_gear_ratio, then=Stop.HOLD)
+
+    async def parallel_right_attachment_turn(self, angle, speed=300):
+        await self.right_attachment.run_angle(speed, angle * self.right_gear_ratio, then=Stop.HOLD)
+
+    async def both_attachments_turn(self, angle, speed):
+        await multitask(
+            self.parallel_left_attachment_turn(angle * -1, speed=speed),
+            self.parallel_right_attachment_turn(angle, speed=speed)
+        )
+
+    async def attachment_turn_and_move(self, angle, distance, turn_speed=300, move_speed=150):
+        await multitask(
+            self.both_attachments_turn(angle, speed=turn_speed),
+            self.parallel_move(distance, speed=move_speed)
+        )
+
+    def set_gear_ratio(self, gears):
+        # Calculate the gear ratio based on the number of teeth on the gears
+        # For example, if you have a 20-tooth gear driving a 40-tooth gear, the gear ratio is 2:1
+        previous_gear_teeth = 0
+        gear_ratio = 1.0
+        for index in range(len(gears)):
+            current_gear_teeth = gears[index]
+            if previous_gear_teeth != 0:
+                gear_ratio *= current_gear_teeth / previous_gear_teeth
+            previous_gear_teeth = current_gear_teeth
+        return gear_ratio
+
