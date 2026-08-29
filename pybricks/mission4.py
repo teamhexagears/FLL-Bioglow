@@ -1,3 +1,6 @@
+if __name__ == "__main__":
+    import main
+
 from pybricks.tools import multitask
 
 async def m4(robot):

@@ -1,3 +1,6 @@
+if __name__ == "__main__":
+    import main
+
 from umath import atan2, sqrt
 from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor
@@ -10,8 +13,8 @@ class Robot:
         self.hub = PrimeHub()
         self.left_motor = Motor(Port.F, Direction.COUNTERCLOCKWISE)
         self.right_motor = Motor(Port.B, Direction.CLOCKWISE)
-        self.right_attachment = Motor(Port.A, Direction.CLOCKWISE, [20, 12])
-        self.left_attachment = Motor(Port.D, Direction.CLOCKWISE, [20, 20])
+        self.right_attachment = Motor(Port.A, Direction.CLOCKWISE, [20])
+        self.left_attachment = Motor(Port.D, Direction.CLOCKWISE, [20])
         self.drive_base = DriveBase(self.left_motor, self.right_motor, wheel_diameter=62, axle_track=140)
         self.left_color = ColorSensor(Port.E)
         self.right_color = ColorSensor(Port.C)
@@ -160,6 +163,12 @@ class Robot:
     def right_attachment_turn(self, angle, speed=300):
         self.right_attachment.run_angle(speed, angle)
 
+    async def parallel_right_attachment_turn(self, angle, speed=300):
+        await self.right_attachment.run_angle(speed, angle)
+
+    async def parallel_left_attachment_turn(self, angle, speed=300):
+        await self.left_attachment.run_angle(speed, angle)
+
     def left_attachment_turn(self, angle, speed=300):
         self.left_attachment.run_angle(speed, angle)
 
@@ -168,3 +177,9 @@ class Robot:
 
     async def left_attachment_reset(self):
         await self.left_attachment.run_until_stalled(700, duty_limit=40)
+
+    async def both_attachment_turn(self, angle, speed=100):
+        await multitask(
+            self.parallel_right_attachment_turn(angle, speed),
+            self.parallel_left_attachment_turn(angle * -1, speed)
+        )
