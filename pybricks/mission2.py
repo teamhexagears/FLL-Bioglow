@@ -3,3 +3,4 @@ if __name__ == "__main__":
 
 def m2(robot):
     robot.move(100)
+    robot.turn(90)
