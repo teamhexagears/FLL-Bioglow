@@ -14,3 +14,5 @@ Code for FLL BIoglow
 | `robot.left_attachment_turn` | `angle`, `speed=300` | Rotates the left attachment by `angle` degrees at the specified speed |
 | `robot.right_attachment_reset` | None | Resets the right attachment by running it until it stalls |
 | `robot.left_attachment_reset` | None | Resets the left attachment by running it until it stalls |
+| `both_attachment_turn` | angle, speed=100 | two moter attachment turn at the same time |
+| `both_attachment_reset` | distance, speed=150 | reset boyh attachment at the same time |
