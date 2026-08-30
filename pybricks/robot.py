@@ -20,11 +20,13 @@ class Robot:
         self.right_color = ColorSensor(Port.C)
         self.drive_base.use_gyro(True)
         self.drive_base.settings(150, 300, 200, 325)
-        self.left_color.detectable_colors([Color.WHITE, Color.NONE])
-        self.right_color.detectable_colors([Color.WHITE, Color.NONE])
+        self.white = Color(h=0, s=0, v=5)
+        self.black = Color(h=0, s=0, v=95)
+        self.left_color.detectable_colors([self.white, self.black])
+        self.right_color.detectable_colors([self.white, self.black])
+
 
 # function
-
     def move(self, distance, speed=150):
         self.drive_base.settings(speed, 300, 200, 325)
         self.drive_base.reset(0,0)
@@ -69,65 +71,125 @@ class Robot:
     def move_till_line(self, speed=50):
         # Start moving forward
         self.drive_base.drive(speed, 0)
-        self.drive_base.stop()
-        
-        # State tracking: 0 = searching for white, 1 = searching for black, 2 = done
+    
+        # State tracking:
+        # 0 = searching for white line
+        # 1 = found white, waiting for black (non-white)
+        # 2 = found white-to-black transition
+        # 3 = complete (final state)
         l_state = 0
         r_state = 0
+    
+        # Debounce counters to filter out transient false positives
+        l_counter = 0
+        r_counter = 0
+        DEBOUNCE_TARGET = 5  # Must see the color 5 times in a row to transition
 
-        
         while True:
-            # check left color sensor state
-            if self.left_color.color() == Color.WHITE:
-                l_state = 1
-            elif l_state == 1 and self.left_color.color() == Color.NONE:
-                l_state = 2
-                self.drive_base.stop()
-            else:
-                l_state = 0
-
-            # check right color sensor state
-            if self.right_color.color() == Color.WHITE:
-                r_state = 1
-            elif r_state == 1 and self.right_color.color() == Color.NONE:
-                r_state = 2
-                self.drive_base.stop()
-            else:
-                r_state = 0
-            print("right: " + str(self.right_color.color()))
-            print("left: " + str(self.left_color.color()))
-
-            
-            # If left sensor finishes first
-            if l_state == 2:
-                self.drive_base.stop()
-                self.drive_base.drive(0, -30) # Slowly turn clockwise to align right sensor
-                while r_state < 2:
-                    if self.right_color.color() == Color.WHITE:
-                        r_state = 1
-                    elif r_state == 1 and self.right_color.color() == Color.NONE:
-                        r_state = 2
-                    else:
-                        r_state = 0
-
-            # If right sensor finishes first
-            elif r_state == 2:
-                self.drive_base.stop()
-                self.drive_base.drive(0, 30) # Slowly turn counter-clockwise to align left sensor
-                while l_state < 2:
-                    if self.left_color.color() == Color.WHITE:
-                       l_state = 1
-                    elif l_state == 1 and self.left_color.color() == Color.NONE:
+            # --- LEFT SENSOR STATE MACHINE ---
+            l_color = self.left_color.color()
+            if l_state == 0:
+                if l_color == self.white:
+                    l_counter += 1
+                    if l_counter >= DEBOUNCE_TARGET:
+                        l_state = 1
+                        l_counter = 0
+                else:
+                    l_counter = 0  # Reset if the streak breaks
+            elif l_state == 1:
+                if l_color == self.black:
+                    l_counter += 1
+                    if l_counter >= DEBOUNCE_TARGET:
                         l_state = 2
-                    else:
-                        l_state = 0
+                        l_counter = 0
+                else:
+                    l_counter = 0
+            elif l_state == 2:
+                l_state = 3
 
-            # exit condition
-            if l_state == 2 and r_state == 2:
+            # --- RIGHT SENSOR STATE MACHINE ---
+            r_color = self.right_color.color()
+            if r_state == 0:
+                if r_color == self.white:
+                    r_counter += 1
+                    if r_counter >= DEBOUNCE_TARGET:
+                        r_state = 1
+                        r_counter = 0
+                else:
+                   r_counter = 0
+            elif r_state == 1:
+                if r_color == self.black:
+                    r_counter += 1
+                    if r_counter >= DEBOUNCE_TARGET:
+                        r_state = 2
+                        r_counter = 0
+                else:
+                    r_counter = 0
+            elif r_state == 2:
+                r_state = 3
+
+            # --- ALIGNMENT ROTATIONS ---
+            # If left sensor finishes first, rotate clockwise to align right sensor
+            if l_state == 3 and r_state < 3:
+                self.drive_base.stop()
+                self.drive_base.drive(0, 30)  # Slowly turn clockwise
+                r_counter = 0
+                while r_state < 3:
+                    r_color = self.right_color.color()
+                    if r_state == 0:
+                        if r_color == self.white:
+                            r_counter += 1
+                            if r_counter >= DEBOUNCE_TARGET:
+                                r_state = 1
+                                r_counter = 0
+                        else:
+                            r_counter = 0
+                    elif r_state == 1:
+                        if r_color == self.black:
+                            r_counter += 1
+                            if r_counter >= DEBOUNCE_TARGET:
+                                r_state = 2
+                                r_counter = 0
+                        else:
+                            r_counter = 0
+                    elif r_state == 2:
+                        r_state = 3
+                    wait(10)
+
+            # If right sensor finishes first, rotate counter-clockwise to align left sensor
+            elif r_state == 3 and l_state < 3:
+                self.drive_base.stop()
+                self.drive_base.drive(0, -30)  # Slowly turn counter-clockwise
+                l_counter = 0
+                while l_state < 3:
+                    l_color = self.left_color.color()
+                    if l_state == 0:
+                        if l_color == self.white:
+                            l_counter += 1
+                            if l_counter >= DEBOUNCE_TARGET:
+                                l_state = 1
+                                l_counter = 0
+                        else:
+                            l_counter = 0
+                    elif l_state == 1:
+                        if l_color == self.black:
+                            l_counter += 1
+                            if l_counter >= DEBOUNCE_TARGET:
+                                l_state = 2
+                                l_counter = 0
+                        else:
+                            l_counter = 0
+                    elif l_state == 2:
+                        l_state = 3
+                    wait(10)
+
+            # Exit condition: both sensors have completed the transition
+            if l_state == 3 and r_state == 3:
                 break
-        wait(10)
-        self.drive_base.stop()
 
+            wait(10)
+
+        self.drive_base.stop()
         
 
     def curve_move(self, speed, straight_distance, turn_distance):
@@ -178,12 +240,13 @@ class Robot:
     async def left_attachment_reset(self):
         await self.left_attachment.run_until_stalled(-700, duty_limit=40)
 
-    async def both_attachment_turn(self, angle, speed=100):
+    async def both_attachment_turn(self, right_angle=0, left_angle=0, right_speed=100, left_speed=100):
         await multitask(
-            self.parallel_right_attachment_turn(angle, speed),
-            self.parallel_left_attachment_turn(angle * -1, speed)
+            self.parallel_right_attachment_turn(right_angle, right_speed),
+            self.parallel_left_attachment_turn(left_angle, left_speed)
         )
-    async def both_attachments_reset(self, distance, speed=150):
+
+    async def both_attachment_reset(self, distance, speed=150):
         await multitask(
             self.left_attachment_reset(),
             self.right_attachment_reset(),
