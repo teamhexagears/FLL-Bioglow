@@ -15,4 +15,4 @@ Code for FLL BIoglow
 | `robot.right_attachment_reset` | None | Resets the right attachment by running it until it stalls |
 | `robot.left_attachment_reset` | None | Resets the left attachment by running it until it stalls |
 | `both_attachment_turn` | angle, speed=100 | two motor attachment turn at the same time |
-| `both_attachment_reset` | distance, speed=150 | reset both attachment at the same time while moving|
+| `both_attachment_reset` | distance, speed=150 | distance equal moving distance reset both attachment at the same time while moving|

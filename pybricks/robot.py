@@ -13,9 +13,11 @@ class Robot:
         self.hub = PrimeHub()
         self.left_motor = Motor(Port.F, Direction.COUNTERCLOCKWISE)
         self.right_motor = Motor(Port.B, Direction.CLOCKWISE)
-        self.right_attachment = Motor(Port.A, Direction.CLOCKWISE, [20])
-        self.left_attachment = Motor(Port.D, Direction.CLOCKWISE, [20])
+        self.right_attachment = Motor(Port.A, Direction.COUNTERCLOCKWISE, [12, 20])
+        self.left_attachment = Motor(Port.D, Direction.CLOCKWISE, [12, 20])
         self.drive_base = DriveBase(self.left_motor, self.right_motor, wheel_diameter=62, axle_track=140)
+        self.right_attachment.dc(40)
+        self.left_attachment.dc(40)
         self.left_color = ColorSensor(Port.E)
         self.right_color = ColorSensor(Port.C)
         self.drive_base.use_gyro(True)
@@ -238,7 +240,7 @@ class Robot:
         await self.right_attachment.run_until_stalled(700, duty_limit=40)
 
     async def left_attachment_reset(self):
-        await self.left_attachment.run_until_stalled(-700, duty_limit=40)
+        await self.left_attachment.run_until_stalled(700, duty_limit=40)
 
     async def both_attachment_turn(self, right_angle=0, left_angle=0, right_speed=100, left_speed=100):
         await multitask(
