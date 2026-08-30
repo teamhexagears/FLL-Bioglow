@@ -176,10 +176,16 @@ class Robot:
         await self.right_attachment.run_until_stalled(700, duty_limit=40)
 
     async def left_attachment_reset(self):
-        await self.left_attachment.run_until_stalled(700, duty_limit=40)
+        await self.left_attachment.run_until_stalled(-700, duty_limit=40)
 
     async def both_attachment_turn(self, angle, speed=100):
         await multitask(
             self.parallel_right_attachment_turn(angle, speed),
             self.parallel_left_attachment_turn(angle * -1, speed)
+        )
+    async def reset_both_attachments(self, distance, speed=150):
+        await multitask(
+            self.left_attachment_reset(),
+            self.right_attachment_reset(),
+            self.parallel_move(distance, speed)
         )

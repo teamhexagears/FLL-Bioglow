@@ -24,7 +24,7 @@ while True:
     elif selected == 3:
         m3(robot)
     elif selected == 4:
-        run_task(m4(robot))
+        m4(robot)
     elif selected == 5:
         m5(robot)
     
