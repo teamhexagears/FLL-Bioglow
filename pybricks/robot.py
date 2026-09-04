@@ -16,8 +16,6 @@ class Robot:
         self.right_attachment = Motor(Port.A, Direction.COUNTERCLOCKWISE, [12, 20])
         self.left_attachment = Motor(Port.D, Direction.CLOCKWISE, [12, 20])
         self.drive_base = DriveBase(self.left_motor, self.right_motor, wheel_diameter=62, axle_track=140)
-        self.right_attachment.dc(40)
-        self.left_attachment.dc(40)
         self.left_color = ColorSensor(Port.E)
         self.right_color = ColorSensor(Port.C)
         self.drive_base.use_gyro(True)
