@@ -5,7 +5,12 @@ from pybricks.tools import run_task
 
 def m3(robot):
     robot.move(5)
-    robot.turn(58)
+    robot.turn(60)
+    robot.right_attachment_turn(30)
     run_task(robot.both_attachment_turn(-50, 0, -45, 0, 800))
-    robot.right_attachment_turn(40)
-    
+    robot.right_attachment_turn(-70, 500)
+    robot.right_attachment_turn(140, 500)
+    robot.right_attachment_turn(-50, 500)
+    robot.move(-50)
+    robot.turn(30)
+    robot.move(-50)

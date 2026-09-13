@@ -26,7 +26,7 @@ class Robot:
         self.right_color.detectable_colors([self.white, self.black])
 
 
-# function
+    # function
     def move(self, distance, speed=150):
         self.drive_base.settings(speed, 300, 200, 325)
         self.drive_base.reset(0,0)
@@ -247,7 +247,8 @@ class Robot:
             self.parallel_move(distance)
         )
 
-    async def both_attachment_reset(self, distance, speed=150):
+    async def both_attachment_reset(self, distance_cm, speed=150):
+        distance = distance_cm * 10
         await multitask(
             self.left_attachment_reset(),
             self.right_attachment_reset(),
