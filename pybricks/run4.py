@@ -1,11 +1,18 @@
-# Wesley's Mission 4 code ya baby
+# Team Green - M15
 
 if __name__ == "__main__":
     import main
-
+# team green
 from pybricks.tools import run_task
 
 def r4(robot):
-    run_task(robot.left_attachment_reset())
-    robot.move(67)
-    robot.turn(-45)
+    robot.move(5)
+    robot.turn(60)
+    robot.right_attachment_turn(30)
+    run_task(robot.both_attachment_turn(-50, 0, -45, 0, 800))
+    robot.right_attachment_turn(-70, 500)
+    robot.right_attachment_turn(140, 500)
+    robot.right_attachment_turn(-50, 500)
+    robot.move(-50)
+    robot.turn(30)
+    robot.move(-50)

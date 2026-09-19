@@ -1,9 +1,9 @@
-# Team Red - M8 + M9 + M10
+# team Red - M3
 
 if __name__ == "__main__":
     import main
 
 from pybricks.tools import run_task
 
-def r3(robot):
-    robot.move(5)
+def r8(robot):
+    run_task(robot.both_attachment_reset(34, 200))
