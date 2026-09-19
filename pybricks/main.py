@@ -4,13 +4,14 @@ from mission2 import m2
 from mission3 import m3
 from mission4 import m4
 from mission5 import m5
+from mission6 import m6
 from robot import Robot
 from pybricks.tools import multitask, run_task, wait, hub_menu
 from pybricks.parameters import Color
 
 robot = Robot()
 
-original = [1, 2, 3, 4, 5]
+original = [1, 2, 3, 4, 5, 6]
 options = original
 while True:
     # select list
@@ -27,7 +28,9 @@ while True:
         m4(robot)
     elif selected == 5:
         m5(robot)
-    
+    elif selected == 6:
+        m6(robot)
+
     robot.hub.light.on(Color.GREEN)
     
     # come up with next options list

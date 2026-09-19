@@ -38,7 +38,7 @@ class Robot:
         self.drive_base.settings(speed, 300, 200, 325)
         self.drive_base.reset(0,0)
         await wait(50)
-        await self.drive_base.straight(distance, then=Stop.HOLD, wait=True)
+        await self.drive_base.straight(distance * 10, then=Stop.HOLD, wait=True)
         self.drive_base.stop()
 
     def turn(self, angle, speed=150):
@@ -203,13 +203,13 @@ class Robot:
             return
         print('2')
         # Calculate the circle radius and arc angle to hit the (x, y) target
-        radius = sqrt(turn_distance ** 2 + straight_distance ** 2)
+        radius = sqrt((turn_distance *10) ** 2 + (straight_distance *10)** 2)
         ## AI wrote this - radius = (turn_distance ** 2 + straight_distance ** 2) / (2 * turn_distance)
-        arc_angle = atan2(straight_distance, turn_distance)*100
+        arc_angle = atan2(straight_distance *10 , turn_distance*10)*100
         print("R: " + str(radius))
         print("A: " + str(arc_angle))
         #self.drive_base.arc(radius=radius, angle=arc_angle)
-        self.drive_base.arc(radius=straight_distance, angle=90)
+        self.drive_base.arc(radius=straight_distance*10, angle=90)
 
         print('4')
         heading = 90-(self.hub.imu.heading())
@@ -244,7 +244,7 @@ class Robot:
         await multitask(
             self.parallel_right_attachment_turn(right_angle, right_speed),
             self.parallel_left_attachment_turn(left_angle, left_speed),
-            self.parallel_move(distance)
+            self.parallel_move(distance*10)
         )
 
     async def both_attachment_reset(self, distance_cm, speed=150):
