@@ -1,9 +1,9 @@
 if __name__ == "__main__":
     import main
-
+# team green
 from pybricks.tools import run_task
 
-def m3(robot):
+def r3(robot):
     robot.move(5)
     robot.turn(60)
     robot.right_attachment_turn(30)

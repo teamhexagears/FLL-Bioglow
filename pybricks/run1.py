@@ -5,7 +5,7 @@ if __name__ == "__main__":
 
 from pybricks.tools import run_task
 
-def m1(robot):
+def r1(robot):
     run_task(robot.both_attachment_reset(34, 200))
     run_task(robot.both_attachment_turn(-347, -347, 160, 160))
     run_task(robot.both_attachment_turn(distance=-58, right_angle=-60,left_angle=-60))

@@ -1,10 +1,10 @@
 # this is main, run code from here
-from mission1 import m1
-from mission2 import m2
-from mission3 import m3
-from mission4 import m4
-from mission5 import m5
-from mission6 import m6
+from run1 import r1
+from run2 import r2
+from run3 import r3
+from run4 import r4
+from run5 import r5
+from run6 import r6
 from robot import Robot
 from pybricks.tools import multitask, run_task, wait, hub_menu
 from pybricks.parameters import Color
@@ -19,17 +19,17 @@ while True:
 
     robot.hub.light.off()
     if selected == 1:
-        m1(robot)
+        r1(robot)
     elif selected == 2:
-        m2(robot)
+        r2(robot)
     elif selected == 3:
-        m3(robot)
+        r3(robot)
     elif selected == 4:
-        m4(robot)
+        r4(robot)
     elif selected == 5:
-        m5(robot)
+        r5(robot)
     elif selected == 6:
-        m6(robot)
+        r6(robot)
 
     robot.hub.light.on(Color.GREEN)
     
