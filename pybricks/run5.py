@@ -1,4 +1,4 @@
-# Team Green - M1 + M6 + M11b   
+# Team Green - M1 + M6 + M11b
 
 if __name__ == "__main__":
     import main
@@ -6,7 +6,8 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r5(robot):
-    run_task(robot.both_attachment_reset(500, 400))
-
-    robot.right_attachment_turn(100)
-    robot.right_attachment_turn(1000, 500)
+    robot.move(80, 500)
+    robot.turn(-20)
+    robot.move(6)
+    robot.move(-3)
+    robot.turn(-40, 500)
