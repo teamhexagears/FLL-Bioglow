@@ -245,7 +245,19 @@ class Robot:
             self.parallel_right_attachment_turn(right_angle, right_speed),
             self.parallel_left_attachment_turn(left_angle, left_speed),
             self.parallel_move(distance*10)
-        )
+        ) 
+        
+        async def left_attachment_while_move(left_angle=0, left_speed=100, distance=0,)
+            await multitask(
+                self.parallel_left_attachment_turn(left_angle, left_speed),
+                self.parallel_move(distance*10)
+            )
+
+        async def right_attachment_while_move(right_angle=0, right_speed=100, distance=0,)
+            await multitask(
+                self.parallel_right_attachment_turn(right_angle, right_speed),
+                self.parallel_move(distance*10)
+                        )
 
     async def both_attachment_reset(self, distance_cm, speed=150):
         distance = distance_cm * 10
