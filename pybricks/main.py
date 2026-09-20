@@ -6,7 +6,7 @@ from run4 import r4
 from run5 import r5
 from run6 import r6
 from run7 import r7
-from run8 import r8w
+from run8 import r8
 from robot import Robot
 from pybricks.tools import multitask, run_task, wait, hub_menu
 from pybricks.parameters import Color

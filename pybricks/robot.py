@@ -27,7 +27,7 @@ class Robot:
 
 
     # function
-    def move(self, distance, speed=150):
+    def move(self, distance, speed=450):
         self.drive_base.settings(speed, 300, 200, 325)
         self.drive_base.reset(0,0)
         wait(50)
