@@ -17,7 +17,8 @@ def r5(robot):
     robot.move(5)
     robot.turn(-20)
     robot.move(25)
-    robot.turn(35)
+    robot.turn(40)
     robot.move(25)
-    robot.turn(-30)
-    robot.move(50)
+    robot.turn(140)
+    robot.move(45)
+    
