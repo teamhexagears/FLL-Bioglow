@@ -6,4 +6,9 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r7(robot):
-    run_task(robot.both_attachment_reset(34, 200))
+  robot.move(44)
+  robot.turn(41)
+  robot.move(17)
+  robot.right_attachment_turn(-5)
+  robot.turn(65)
+  robot.move(-20)
