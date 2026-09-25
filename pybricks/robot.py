@@ -34,7 +34,7 @@ class Robot:
         self.drive_base.straight(distance * 10, then=Stop.HOLD, wait=True)
         self.drive_base.stop()
 
-    async def parallel_move(self, distance, speed=150):
+    async def parallel_move(self, distance, speed=450):
         self.drive_base.settings(speed, 300, 200, 325)
         self.drive_base.reset(0,0)
         await wait(50)
@@ -234,23 +234,22 @@ class Robot:
     def left_attachment_turn(self, angle, speed=300):
         self.left_attachment.run_angle(speed, angle)
 
-    async def right_attachment_reset(self):
-        await self.right_attachment.run_until_stalled(700, duty_limit=50)
+    async def right_attachment_reset(self, speed=150):
+        await self.right_attachment.run_until_stalled(700, duty_limit=speed)
 
-    async def left_attachment_reset(self):
-        await self.left_attachment.run_until_stalled(700, duty_limit=50)
+    async def left_attachment_reset(self, speed=150):
+        await self.left_attachment.run_until_stalled(700, duty_limit=speed)
 
-    async def both_attachment_turn(self,right_angle=0, left_angle=0, right_speed=100, left_speed=100, distance=0):
+    async def both_attachment_turn(self,right_angle=0, left_angle=0, right_speed=100, left_speed=100, distance=0, move_speed=450):
         await multitask(
             self.parallel_right_attachment_turn(right_angle, right_speed),
             self.parallel_left_attachment_turn(left_angle, left_speed),
-            self.parallel_move(distance*10)
+            self.parallel_move(distance*10, move_speed)
         )
 
-    async def both_attachment_reset(self, distance_cm, speed=150):
-        distance = distance_cm * 10
+    async def both_attachment_reset(self, distance, move_speed=450, left_speed=150, right_speed=150):
         await multitask(
-            self.left_attachment_reset(),
-            self.right_attachment_reset(),
-            self.parallel_move(distance, speed)
+            self.left_attachment_reset(left_speed),
+            self.right_attachment_reset(right_speed),
+            self.parallel_move(distance * 10, move_speed)
         )
