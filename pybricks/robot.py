@@ -218,6 +218,18 @@ class Robot:
         self.drive_base.turn(heading)
         self.stop()
 
+    async def left_attachment_while_move(self, left_angle=0, left_speed=100, distance=0):
+        await multitask(
+            self.parallel_left_attachment_turn(left_angle, left_speed),
+            self.parallel_move(distance*10)
+        )
+
+    async def right_attachment_while_move(self, right_angle=0, right_speed=100, distance=0,):
+        await multitask(
+            self.parallel_right_attachment_turn(right_angle, right_speed),
+            self.parallel_move(distance*10)
+        )
+
 
     def stop(self):
         self.drive_base.stop()
@@ -251,5 +263,5 @@ class Robot:
         await multitask(
             self.left_attachment_reset(left_speed),
             self.right_attachment_reset(right_speed),
-            self.parallel_move(distance * 10, move_speed)
+            self.parallel_move(distance, move_speed)
         )
