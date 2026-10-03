@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLL Bioglow Results Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">FLL Bioglow</p>
+          <h1>Results Tracker</h1>
+        </div>
+        <div id="saveStatus" class="status-pill" aria-live="polite">Ready</div>
+      </header>
+
+      <section class="panel controls">
+        <div class="field-group">
+          <label for="attemptNumber">Attempt Number</label>
+          <input id="attemptNumber" type="number" min="1" value="1" />
+        </div>
+
+        <div class="field-group">
+          <label for="runNumber">Run Number</label>
+          <input id="runNumber" type="number" min="1" value="1" />
+        </div>
+
+        <button id="nextRunButton" class="secondary-button" type="button">Next Run</button>
+      </section>
+
+      <section class="summary-row">
+        <div class="summary-card">
+          <span class="summary-label">Current Score</span>
+          <strong id="currentScore">0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Completed</span>
+          <strong id="completedCount">0 / 0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Mission Count</span>
+          <strong id="missionCount">0</strong>
+        </div>
+      </section>
+
+      <section class="panel mission-panel">
+        <div class="mission-header">
+          <h2>Mission Checklist</h2>
+          <button id="resetRunButton" class="ghost-button" type="button">Reset Run</button>
+        </div>
+
+        <div id="missionList" class="mission-list" aria-live="polite"></div>
+      </section>
+
+      <section class="actions">
+        <button id="saveRunButton" class="primary-button" type="button">Save Run to Google Sheet</button>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
