@@ -259,9 +259,9 @@ class Robot:
             self.parallel_move(distance*10, move_speed)
         )
 
-    async def both_attachment_reset(self, distance, move_speed=450, left_speed=150, right_speed=150):
+    async def both_attachment_reset(self, distance, move_speed=450, left_speed=150, right_speed=150, left_direction="right"):
         await multitask(
-            self.left_attachment_reset(left_speed),
-            self.right_attachment_reset(right_speed),
+            self.left_attachment_reset(speed=left_speed,),
+            self.right_attachment_reset(speed=right_speed),
             self.parallel_move(distance, move_speed)
         )
