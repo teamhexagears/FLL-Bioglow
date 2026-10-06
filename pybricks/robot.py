@@ -34,6 +34,12 @@ class Robot:
         self.drive_base.straight(distance * 10, then=Stop.HOLD, wait=True)
         self.drive_base.stop()
 
+    def thrust(self, distance, speed=750):
+        self.drive_base.settings(speed, 300, 200, 325)
+        self.drive_base.reset(0,0)
+        self.drive_base.straight(distance * 10, then=Stop.HOLD, wait=True)
+        self.drive_base.stop()
+
     async def parallel_move(self, distance, speed=450):
         self.drive_base.settings(speed, 300, 200, 325)
         self.drive_base.reset(0,0)

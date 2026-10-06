@@ -4,6 +4,7 @@ Code for FLL BIoglow
 | Function name | Parameters | Description |
 | -------- | -------- | -------- |
 | `robot.move` | `distance`, `speed=450` | `distance` is the distance to travel; `speed` controls driving speed |
+| `robot.thrust` | `distance`, `speed=750` | `distance` is the distance to travel; `speed` controls driving speed, same as move, but no wait|
 | `robot.parallel_move` | `distance`, `speed=450` | *this is for multitasking* `distance` is the distance to travel; `speed` controls driving speed |
 | `robot.turn` | `angle`, `speed=150` | `angle` is the turning angle in degrees; `speed` controls turning speed |
 | `robot.move_till_stalled` | `speed=50` | *not very reliable* `speed` controls how fast the robot drives while looking for a stall |
@@ -26,4 +27,5 @@ Code for FLL BIoglow
 
 (done!!!) right attachment reset turn other direction
 
-add thrust function
+(done!!!) add thrust function
+
