@@ -19,6 +19,11 @@ Code for FLL BIoglow
 
 ## Features to add
 (done!!!) both attachment reset while moving
+
 (done!!!) both attachment turn with move
+
 (done!!!) both attachment turn with speed
+
 (done!!!) right attachment reset turn other direction
+
+add thrust function
