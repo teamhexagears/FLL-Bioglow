@@ -246,11 +246,19 @@ class Robot:
     def left_attachment_turn(self, angle, speed=300):
         self.left_attachment.run_angle(speed, angle)
 
-    async def right_attachment_reset(self, speed=150):
-        await self.right_attachment.run_until_stalled(700, duty_limit=speed)
+    async def right_attachment_reset(self, power=150):
+        if power < 0:
+            speed = -700
+        else:
+            speed = 700
+        await self.right_attachment.run_until_stalled(speed=speed, duty_limit=power)
 
-    async def left_attachment_reset(self, speed=150):
-        await self.left_attachment.run_until_stalled(700, duty_limit=speed)
+    async def left_attachment_reset(self, power=150):
+        if power < 0:
+            speed = -700
+        else:
+            speed = 700
+        await self.left_attachment.run_until_stalled(speed=speed, duty_limit=power)
 
     async def both_attachment_turn(self,right_angle=0, left_angle=0, right_speed=100, left_speed=100, distance=0, move_speed=450):
         await multitask(
@@ -259,9 +267,9 @@ class Robot:
             self.parallel_move(distance*10, move_speed)
         )
 
-    async def both_attachment_reset(self, distance, move_speed=450, left_speed=150, right_speed=150, left_direction="right"):
+    async def both_attachment_reset(self, distance, move_speed=450, left_power=150, right_power=150):
         await multitask(
-            self.left_attachment_reset(speed=left_speed,),
-            self.right_attachment_reset(speed=right_speed),
+            self.left_attachment_reset(power=left_power),
+            self.right_attachment_reset(power=right_power),
             self.parallel_move(distance, move_speed)
         )

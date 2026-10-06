@@ -12,10 +12,13 @@ Code for FLL BIoglow
 | `robot.stop` | None | Stops the driving base |
 | `robot.right_attachment_turn` | `angle`, `speed=300` | Rotates the right attachment by `angle` degrees at the specified speed |
 | `robot.left_attachment_turn` | `angle`, `speed=300` | Rotates the left attachment by `angle` degrees at the specified speed |
-| `robot.right_attachment_reset` | None | Resets the right attachment by running it until it stalls |
-| `robot.left_attachment_reset` | None | Resets the left attachment by running it until it stalls |
-| `both_attachment_turn` |right_angle=0, left_angle=0, right_speed=100, left_speed=100, distance=0, move_speed=450|*if you want to turn the motor the other way use a negative number* two motor attachment turn at the same time, different angle, while driving the robot |
-| `both_attachment_reset` | distance, speed=450, left_speed=150, right_speed=150 |reset both attatchments while moving use speed if want to change reset direction|
+| `robot.right_attachment_reset` | `power=150` | Resets the right attachment by running it until it stalls |
+| `robot.left_attachment_reset` | `power=150` | Resets the left attachment by running it until it stalls |
+| `both_attachment_turn` |`right_angle=0`, `left_angle=0`, `right_speed=100`, `left_speed=100`, `distance=0`, `move_speed=450`|*if you want to turn the motor the other way use a negative number* two motor attachment turn at the same time, different angle, while driving the robot |
+| `both_attachment_reset` | `distance`, `move_speed=450`, `left_power=150`, `right_power=150` |reset both attatchments while moving use speed if want to change reset direction|
 
 ## Features to add
-right attachment reset turn other direction 
+(done!!!) both attachment reset while moving
+(done!!!) both attachment turn with move
+(done!!!) both attachment turn with speed
+(done!!!) right attachment reset turn other direction
