@@ -16,18 +16,21 @@
         <div id="saveStatus" class="status-pill" aria-live="polite">Ready</div>
       </header>
 
-      <section class="panel controls">
-        <div class="field-group">
-          <label for="attemptNumber">Attempt Number</label>
-          <input id="attemptNumber" type="number" min="1" value="1" />
+      <section class="score-banner panel">
+        <div class="score-banner-main">
+          <span class="score-label">Live Score</span>
+          <strong id="liveScore" class="live-score">0</strong>
         </div>
-
-        <div class="field-group">
-          <label for="runNumber">Run Number</label>
-          <input id="runNumber" type="number" min="1" value="1" />
+        <div class="score-banner-meta">
+          <div>
+            <span class="meta-label">Attempt</span>
+            <strong id="attemptBadge">1</strong>
+          </div>
+          <div>
+            <span class="meta-label">Run</span>
+            <strong id="runBadge">1</strong>
+          </div>
         </div>
-
-        <button id="nextRunButton" class="secondary-button" type="button">Next Run</button>
       </section>
 
       <section class="summary-row">

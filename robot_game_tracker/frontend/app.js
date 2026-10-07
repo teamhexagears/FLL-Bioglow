@@ -1,14 +1,52 @@
 const defaultMissions = [
-  { missionId: 'M01', missionName: 'Mission 1', noPoints: 0, yesPoints: 20 },
-  { missionId: 'M02', missionName: 'Mission 2', noPoints: 0, yesPoints: 15 },
-  { missionId: 'M03', missionName: 'Mission 3', noPoints: 0, yesPoints: 25 },
-  { missionId: 'M04', missionName: 'Mission 4', noPoints: 5, yesPoints: 30 },
-  { missionId: 'M05', missionName: 'Mission 5', noPoints: 0, yesPoints: 10 },
-  { missionId: 'M06', missionName: 'Mission 6', noPoints: 5, yesPoints: 35 },
+  { missionId: 'm0', missionName: 'does all your attatchments fit in the launch area?', noPoints: 0, yesPoints: 20 },
+  { missionId: 'm1a', missionName: 'drone is up?', noPoints: 0, yesPoints: 20 },
+  { missionId: 'm1b', missionName: 'drone is in the flap, and is the flap up?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm2a', missionName: 'first seed down?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm2b', missionName: 'second seed down?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm2c', missionName: 'third seed down?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm3a', missionName: 'is flag down?', noPoints: 0, yesPoints: 20 },
+  { missionId: 'm3b', missionName: 'is rock back to it\'s original position?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm5a', missionName: 'is root halfway up?', noPoints: 0, yesPoints: 20 },
+  { missionId: 'm5b', missionName: 'is root fully up?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm6a', missionName: 'is first leaf still standing?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm6b', missionName: 'is second leaf still standing?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm6c', missionName: 'is third leaf still standing?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm6d', missionName: 'is last leaf still standing?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm7a', missionName: 'is myceilem up?', noPoints: 0, yesPoints: 20 },
+  { missionId: 'm7b', missionName: 'is myceilem connected with the other team\'s roots?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm8', missionName: 'vine is down?', noPoints: 0, yesPoints: 30 },
+  { missionId: 'm9a', missionName: 'platform is raised?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm9b', missionName: 'camera tap is down?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm9c', missionName: 'seed is down?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm10a', missionName: 'is snail untouched?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm10b', missionName: 'is spider untouched?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm11a', missionName: 'root cover is down?', noPoints: 0, yesPoints: 20 },
+  { missionId: 'm11b', missionName: 'catch the seed?', noPoints: 0, yesPoints: 0 },
+  { missionId: 'm12a', missionName: 'catch the seed?', noPoints: 0, yesPoints: 0 },
+  { missionId: 'm12b', missionName: 'is the ring tie on the stick?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm12c', missionName: 'is the support cane up?', noPoints: 0, yesPoints: 20 },
+  { missionId: 'm13', missionName: 'is keystone species in the platform and trees up?', noPoints: 0, yesPoints: 30 },
+  { missionId: 'm14a', missionName: 'is first seed in box?', noPoints: 0, yesPoints: 5 },
+  { missionId: 'm14b', missionName: 'is second seed in box?', noPoints: 0, yesPoints: 5 },
+  { missionId: 'm14c', missionName: 'is third seed in box?', noPoints: 0, yesPoints: 5 },
+  { missionId: 'm14d', missionName: 'is fourth seed in box?', noPoints: 0, yesPoints: 5 },
+  { missionId: 'm14e', missionName: 'is first seed touching the ground?', noPoints: 0, yesPoints: 5 },
+  { missionId: 'm14f', missionName: 'is second seed touching the ground?', noPoints: 0, yesPoints: 5 },
+  { missionId: 'm14g', missionName: 'is third seed touching the ground?', noPoints: 0, yesPoints: 5 },
+  { missionId: 'm14h', missionName: 'is fourth seed touching the ground?', noPoints: 0, yesPoints: 5 },
+  { missionId: 'm15a', missionName: 'is garden skylight in?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'm15b', missionName: 'is compost hatch down?', noPoints: 0, yesPoints: 20 },
+  { missionId: 'm15c', missionName: 'is nesting canopy up?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'pt1', missionName: 'is there at least one precision tokens?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'pt2', missionName: 'is there at least two precision tokens?', noPoints: 0, yesPoints: 5 },
+  { missionId: 'pt3', missionName: 'is there at least three precision tokens?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'pt4', missionName: 'is there at least four precision tokens?', noPoints: 0, yesPoints: 10 },
+  { missionId: 'pt5', missionName: 'is there at least five precision tokens?', noPoints: 0, yesPoints: 15 }
 ];
 
 const appConfig = {
-  apiUrl: ''
+  apiUrl: 'https://script.google.com/macros/s/AKfycbymPqak6_-AVdOmjA-wWeBdcPS0GU1AuyciE99eyCrKh3ZxkF3GZa6nGDDu0jQCuJb4/exec'
 };
 
 const state = {
@@ -22,9 +60,26 @@ const attemptInput = document.getElementById('attemptNumber');
 const runInput = document.getElementById('runNumber');
 const missionList = document.getElementById('missionList');
 const currentScoreEl = document.getElementById('currentScore');
+const liveScoreEl = document.getElementById('liveScore');
 const completedCountEl = document.getElementById('completedCount');
 const missionCountEl = document.getElementById('missionCount');
+const attemptBadgeEl = document.getElementById('attemptBadge');
+const runBadgeEl = document.getElementById('runBadge');
 const saveStatusEl = document.getElementById('saveStatus');
+
+function getAttemptValue() {
+  if (!attemptInput) {
+    return state.attempt;
+  }
+  return Number(attemptInput.value) || state.attempt;
+}
+
+function getRunValue() {
+  if (!runInput) {
+    return state.run;
+  }
+  return Number(runInput.value) || state.run;
+}
 
 function getMissionScore(mission, result) {
   const answer = result === true;
@@ -43,9 +98,17 @@ function getCompletedMissionCount() {
 }
 
 function updateTotals() {
-  currentScoreEl.textContent = getCurrentRunScore();
+  const totalScore = getCurrentRunScore();
+  currentScoreEl.textContent = totalScore;
+  liveScoreEl.textContent = totalScore;
   completedCountEl.textContent = `${getCompletedMissionCount()} / ${state.missions.length}`;
   missionCountEl.textContent = state.missions.length;
+  if (attemptBadgeEl) {
+    attemptBadgeEl.textContent = getAttemptValue();
+  }
+  if (runBadgeEl) {
+    runBadgeEl.textContent = getRunValue();
+  }
 }
 
 function setStatus(message, isError = false) {
@@ -62,6 +125,8 @@ function renderMissions() {
     card.className = 'mission-card';
 
     const selectedResult = state.results[mission.missionId];
+    const statusText = selectedResult === true ? 'Yes' : selectedResult === false ? 'No' : 'Pending';
+    const statusClass = selectedResult === true ? 'yes' : selectedResult === false ? 'no' : '';
 
     card.innerHTML = `
       <div class="mission-top">
@@ -72,6 +137,7 @@ function renderMissions() {
         <span>No: ${mission.noPoints}</span>
         <span>Yes: ${mission.yesPoints}</span>
       </div>
+      <div class="status-badge ${statusClass}">${statusText}</div>
       <div class="answer-row">
         <button class="answer-button no ${selectedResult === false ? 'selected' : 'inactive'}" type="button" data-mission-id="${mission.missionId}" data-answer="false">
           No
@@ -108,6 +174,19 @@ function resetRun() {
   setStatus('Run reset');
 }
 
+async function getResultsRowCount() {
+  const response = await fetch(`${appConfig.apiUrl}?action=resultsCount`);
+  if (!response.ok) {
+    throw new Error(`Unable to verify Results sheet (HTTP ${response.status}).`);
+  }
+
+  const data = await response.json();
+  if (!data.ok) {
+    throw new Error(data.message || 'Unable to verify Results sheet.');
+  }
+  return Number(data.rowCount);
+}
+
 async function loadMissions() {
   if (!appConfig.apiUrl || appConfig.apiUrl.includes('PASTE_YOUR')) {
     state.missions = defaultMissions;
@@ -118,6 +197,7 @@ async function loadMissions() {
 
   try {
     const response = await fetch(`${appConfig.apiUrl}?action=missions`);
+    const previousRowCount = await getResultsRowCount();
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
@@ -136,8 +216,8 @@ async function loadMissions() {
 
 async function saveRun() {
   const payload = {
-    attemptNumber: Number(attemptInput.value) || 1,
-    runNumber: Number(runInput.value) || 1,
+    attemptNumber: getAttemptValue(),
+    runNumber: getRunValue(),
     results: state.missions.map((mission) => {
       const result = state.results[mission.missionId];
       return {
@@ -158,11 +238,24 @@ async function saveRun() {
   try {
     const response = await fetch(appConfig.apiUrl, {
       method: 'POST',
+      mode: 'no-cors',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'text/plain;charset=utf-8'
       },
       body: JSON.stringify(payload)
     });
+
+    if (response.type === 'opaque') {
+      const currentRowCount = await getResultsRowCount();
+      const expectedRowCount = previousRowCount + payload.results.length;
+      if (currentRowCount < expectedRowCount) {
+        throw new Error(`Save did not add the expected rows (${currentRowCount - previousRowCount} of ${payload.results.length}). Check Apps Script Executions.`);
+      }
+
+      setStatus(`Saved ${payload.results.length} mission results to the Results sheet.`);
+      resetRun();
+      return;
+    }
 
     const text = await response.text();
     let data = {};
@@ -186,20 +279,17 @@ async function saveRun() {
   }
 }
 
-attemptInput.addEventListener('input', (event) => {
-  state.attempt = Number(event.target.value) || 1;
-});
+if (attemptInput) {
+  attemptInput.addEventListener('input', (event) => {
+    state.attempt = Number(event.target.value) || 1;
+  });
+}
 
-runInput.addEventListener('input', (event) => {
-  state.run = Number(event.target.value) || 1;
-});
-
-document.getElementById('nextRunButton').addEventListener('click', () => {
-  state.run = (Number(runInput.value) || 1) + 1;
-  runInput.value = state.run;
-  resetRun();
-  setStatus(`Run set to ${state.run}`);
-});
+if (runInput) {
+  runInput.addEventListener('input', (event) => {
+    state.run = Number(event.target.value) || 1;
+  });
+}
 
 document.getElementById('resetRunButton').addEventListener('click', resetRun);
 document.getElementById('saveRunButton').addEventListener('click', saveRun);

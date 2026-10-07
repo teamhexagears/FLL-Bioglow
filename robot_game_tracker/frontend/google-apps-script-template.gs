@@ -1,6 +1,15 @@
 function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || 'missions';
 
+  if (action === 'resultsCount') {
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = spreadsheet && spreadsheet.getSheetByName('Results');
+    const result = sheet
+      ? { ok: true, rowCount: sheet.getLastRow() }
+      : { ok: false, message: 'Results sheet not found.' };
+    return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+  }
+
   if (action === 'missions') {
     const rows = getMissionLookup_();
     return ContentService.createTextOutput(JSON.stringify(rows)).setMimeType(ContentService.MimeType.JSON);
