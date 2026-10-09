@@ -1,4 +1,5 @@
 # team Red - M3
+# Starting position??
 
 if __name__ == "__main__":
     import main

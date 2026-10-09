@@ -1,4 +1,5 @@
-# Team Green - M1 + M11a (seed retrieval)
+# Team Green - M1(drone) + M11a (seed retrieval)
+# Starting position??
 
 if __name__ == "__main__":
     import main

@@ -1,5 +1,5 @@
 # green team
-# M13 + M6
+# M13 + M6 (ant)
 
 if __name__ == "__main__":
     import main

@@ -1,4 +1,4 @@
-# team Blue - M7 & M12
+# team Blue - M7 & M12c (support and white stuff)
 # starting position-vertical 8th block
 
 if __name__ == "__main__":
