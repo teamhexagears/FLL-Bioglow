@@ -376,7 +376,12 @@ if (runInput) {
   });
 }
 
-document.getElementById('resetRunButton').addEventListener('click', resetRun);
+document.getElementById('resetRunButton').addEventListener('click', () => {
+  const confirmed = window.confirm('Are you sure you want to reset this run? Your mission answers will be cleared.');
+  if (confirmed) {
+    resetRun();
+  }
+});
 document.getElementById('saveRunButton').addEventListener('click', saveRun);
 startTimerButton.addEventListener('click', startTimer);
 pauseTimerButton.addEventListener('click', pauseTimer);
