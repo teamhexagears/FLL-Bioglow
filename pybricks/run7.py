@@ -1,26 +1,21 @@
-# Team Blue - M12a + M12b
-# 1 and 1/3 black line from the left
+# team Blue - M7 & M12
+# starting position-vertical 8th block
 
 if __name__ == "__main__":
     import main
 
 from pybricks.tools import run_task
 
-def r7(robot):
-  #run_task(robot.both_attachment_reset(distance=44, move_speed=450, left_power=-40, right_power=-50))
-  robot.move(44)
-  robot.turn(41)
-  robot.move(17)
-  robot.left_attachment_turn(angle=145, speed=90)
-  robot.right_attachment_turn(-5)
-  robot.turn(65, speed=100)
-  robot.move(-20)
-  robot.turn(55)
-  robot.right_attachment_turn(150)
-  robot.move(50)
-  robot.turn(147)
-  robot.left_attachment_turn(-85)
-  robot.move(34)
-  robot.left_attachment_turn(angle=50, speed=80)
-  robot.move(-50)
-  
+def r8(robot):
+    #run_task(robot.both_attachment_reset(distance=23, move_speed=450, left_power=-35, right_power=50))
+    robot.move(23)
+    robot.turn(90)
+    robot.move(55)
+    robot.turn(68)
+    robot.move(8)
+    run_task(robot.both_attachment_turn(right_angle=-120, left_angle=200, right_speed=400, left_speed=600, distance=0, move_speed=450))
+    # Go home? 
+
+    #robot.turn(-85)
+    #robot.move(-74)
+    #run_task(robot.both_attachment_reset(distance=123, speed=450, left_speed=150, right_speed=150))

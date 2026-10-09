@@ -1,4 +1,4 @@
-# Team Green - M1 + M6 + M11b 2 from the bottom
+# Team Green - M1 + M11a (seed retrieval)
 
 if __name__ == "__main__":
     import main
