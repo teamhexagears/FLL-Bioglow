@@ -72,8 +72,8 @@ const defaultMissions = [
 ].map(normalizeMission).sort(compareMissionOrder);
 
 const appConfig = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbymPqak6_-AVdOmjA-wWeBdcPS0GU1AuyciE99eyCrKh3ZxkF3GZa6nGDDu0jQCuJb4/exec'
-};
+  apiUrl: 'https://script.google.com/macros/s/AKfycbzSt69ogfEqjZoEbsNqMsXc5JNY8VjBjgYKYLOAtBzaJ6Fw4WEu-Vf0ZOpk3gRuBip2/exec'
+}
 
 const state = {
   missions: [],
