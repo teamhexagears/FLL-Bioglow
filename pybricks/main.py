@@ -8,7 +8,6 @@ from run6 import r6
 from run7 import r7
 from run8 import r8
 from run9 import r9
-from run10 import r10
 from robot import Robot
 from pybricks.tools import multitask, run_task, wait, hub_menu
 from pybricks.parameters import Color
@@ -40,8 +39,6 @@ while True:
         r8(robot)
     elif selected == 9:
         r9(robot)
-    elif selected == 10:
-        r10(robot)
 
     robot.hub.light.on(Color.GREEN)
     
