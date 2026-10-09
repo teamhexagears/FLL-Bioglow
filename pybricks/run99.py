@@ -5,7 +5,7 @@ if __name__ == "__main__":
 
 from pybricks.tools import run_task
 
-def r6(robot):
+def r99(robot):
     robot.move(34)
     robot.turn(-50)
     robot.move(20)
