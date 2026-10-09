@@ -11,4 +11,3 @@ def r6(robot):
     robot.move(20)
     robot.turn(-43)
     robot.move(-15)
-            
