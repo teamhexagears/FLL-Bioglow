@@ -16,25 +16,21 @@
         <div id="saveStatus" class="status-pill" aria-live="polite">Ready</div>
       </header>
 
-      <section class="score-banner panel">
-        <div class="score-banner-main">
-          <span class="score-label">Live Score</span>
-          <strong id="liveScore" class="live-score">0</strong>
+      <section class="timer-panel panel" aria-label="Mission timer">
+        <div class="timer-info">
+          <span class="timer-label">Mission Timer</span>
+          <strong id="timerDisplay" class="timer-display" role="timer" aria-live="off">2:30</strong>
+          <span id="timerState" class="timer-state">Ready</span>
         </div>
-        <div class="score-banner-meta">
-          <div>
-            <span class="meta-label">Attempt</span>
-            <strong id="attemptBadge">1</strong>
-          </div>
-          <div>
-            <span class="meta-label">Run</span>
-            <strong id="runBadge">1</strong>
-          </div>
+        <div class="timer-controls">
+          <button id="startTimerButton" class="primary-button" type="button">Start</button>
+          <button id="pauseTimerButton" class="ghost-button" type="button" disabled>Pause</button>
+          <button id="resetTimerButton" class="ghost-button" type="button">Reset</button>
         </div>
       </section>
 
       <section class="summary-row">
-        <div class="summary-card">
+        <div class="summary-card current-score-card">
           <span class="summary-label">Current Score</span>
           <strong id="currentScore">0</strong>
         </div>

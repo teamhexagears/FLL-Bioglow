@@ -139,48 +139,62 @@ h2 {
   padding: 10px 14px;
 }
 
-.score-banner {
+.timer-panel {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  padding: 20px 22px;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 20px;
   margin-bottom: 20px;
-  background: linear-gradient(135deg, #1a7047 0%, #1f8a5a 100%);
-  color: white;
-  border: none;
+  border-left: 5px solid var(--accent);
 }
 
-.score-banner-main {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.timer-info {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  column-gap: 14px;
+  row-gap: 4px;
 }
 
-.score-label,
-.meta-label {
-  font-size: 0.72rem;
-  letter-spacing: 0.09em;
+.timer-label {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  opacity: 0.85;
 }
 
-.live-score {
-  font-size: clamp(2.2rem, 5vw, 3.3rem);
+.timer-display {
+  color: var(--text);
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
-.score-banner-meta {
-  display: flex;
-  gap: 18px;
+.timer-display.timer-low {
+  color: var(--danger);
 }
 
-.score-banner-meta div {
+.timer-state {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.timer-controls {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 72px;
-  text-align: center;
+  gap: 8px;
+}
+
+.timer-controls button {
+  min-width: 88px;
+  padding: 10px 14px;
+}
+
+.timer-controls button:disabled {
+  cursor: default;
+  opacity: 0.5;
+  transform: none;
 }
 
 .summary-row {
@@ -210,6 +224,16 @@ h2 {
 
 .summary-card strong {
   font-size: 1.8rem;
+}
+
+.current-score-card {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+.current-score-card .summary-label,
+#currentScore {
+  color: white;
 }
 
 .status-pill {
@@ -351,8 +375,18 @@ h2 {
   }
 
   .topbar,
-  .mission-header {
+  .mission-header,
+  .timer-panel {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .timer-controls {
+    width: 100%;
+  }
+
+  .timer-controls button {
+    flex: 1;
+    min-width: 0;
   }
 }

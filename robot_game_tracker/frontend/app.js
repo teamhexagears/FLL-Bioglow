@@ -1,3 +1,29 @@
+function normalizeMission(mission) {
+  const missionName = String(mission.missionName || '').trim();
+  return {
+    ...mission,
+    missionId: String(mission.missionId || '').toUpperCase(),
+    missionName: missionName ? missionName[0].toUpperCase() + missionName.slice(1) : missionName
+  };
+}
+
+const missionOrder = [
+  'M0', 'M3A', 'M3B', 'M2A', 'M2B', 'M2C', 'M5A', 'M5B', 'M8',
+  'M9A', 'M9B', 'M9C', 'M15A', 'M15B', 'M15C', 'M1A', 'M1B',
+  'M6A', 'M6B', 'M6C', 'M6D', 'M11A', 'M12A', 'M12B', 'M11B',
+  'M7A', 'M7B', 'M12C', 'M13', 'M14A', 'M14B', 'M14C', 'M14D', 'M14E',
+  'M14F', 'M14G', 'M14H', 'PT1', 'PT2', 'PT3', 'PT4', 'PT5', 'M10A', 'M10B'
+];
+const missionOrderIndex = new Map(missionOrder.map((missionId, index) => [missionId, index]));
+
+function compareMissionOrder(firstMission, secondMission) {
+  const firstIndex = missionOrderIndex.get(firstMission.missionId);
+  const secondIndex = missionOrderIndex.get(secondMission.missionId);
+  if (firstIndex === undefined) return secondIndex === undefined ? 0 : 1;
+  if (secondIndex === undefined) return -1;
+  return firstIndex - secondIndex;
+}
+
 const defaultMissions = [
   { missionId: 'm0', missionName: 'does all your attatchments fit in the launch area?', noPoints: 0, yesPoints: 20 },
   { missionId: 'm1a', missionName: 'drone is up?', noPoints: 0, yesPoints: 20 },
@@ -43,7 +69,7 @@ const defaultMissions = [
   { missionId: 'pt3', missionName: 'is there at least three precision tokens?', noPoints: 0, yesPoints: 10 },
   { missionId: 'pt4', missionName: 'is there at least four precision tokens?', noPoints: 0, yesPoints: 10 },
   { missionId: 'pt5', missionName: 'is there at least five precision tokens?', noPoints: 0, yesPoints: 15 }
-];
+].map(normalizeMission).sort(compareMissionOrder);
 
 const appConfig = {
   apiUrl: 'https://script.google.com/macros/s/AKfycbymPqak6_-AVdOmjA-wWeBdcPS0GU1AuyciE99eyCrKh3ZxkF3GZa6nGDDu0jQCuJb4/exec'
@@ -60,12 +86,18 @@ const attemptInput = document.getElementById('attemptNumber');
 const runInput = document.getElementById('runNumber');
 const missionList = document.getElementById('missionList');
 const currentScoreEl = document.getElementById('currentScore');
-const liveScoreEl = document.getElementById('liveScore');
 const completedCountEl = document.getElementById('completedCount');
 const missionCountEl = document.getElementById('missionCount');
-const attemptBadgeEl = document.getElementById('attemptBadge');
-const runBadgeEl = document.getElementById('runBadge');
 const saveStatusEl = document.getElementById('saveStatus');
+const timerDisplayEl = document.getElementById('timerDisplay');
+const timerStateEl = document.getElementById('timerState');
+const startTimerButton = document.getElementById('startTimerButton');
+const pauseTimerButton = document.getElementById('pauseTimerButton');
+const resetTimerButton = document.getElementById('resetTimerButton');
+const timerDuration = 2 * 60 * 1000 + 30 * 1000;
+let timerRemaining = timerDuration;
+let timerDeadline = 0;
+let timerInterval = null;
 
 function getAttemptValue() {
   if (!attemptInput) {
@@ -100,21 +132,59 @@ function getCompletedMissionCount() {
 function updateTotals() {
   const totalScore = getCurrentRunScore();
   currentScoreEl.textContent = totalScore;
-  liveScoreEl.textContent = totalScore;
   completedCountEl.textContent = `${getCompletedMissionCount()} / ${state.missions.length}`;
   missionCountEl.textContent = state.missions.length;
-  if (attemptBadgeEl) {
-    attemptBadgeEl.textContent = getAttemptValue();
-  }
-  if (runBadgeEl) {
-    runBadgeEl.textContent = getRunValue();
-  }
 }
 
 function setStatus(message, isError = false) {
   saveStatusEl.textContent = message;
   saveStatusEl.style.background = isError ? 'rgba(212, 71, 71, 0.1)' : 'var(--primary-soft)';
   saveStatusEl.style.color = isError ? 'var(--danger)' : 'var(--primary-dark)';
+}
+
+function renderTimer() {
+  const totalSeconds = Math.ceil(timerRemaining / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  timerDisplayEl.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+  timerDisplayEl.classList.toggle('timer-low', timerRemaining <= 30 * 1000);
+  startTimerButton.disabled = timerInterval !== null || timerRemaining === 0;
+  pauseTimerButton.disabled = timerInterval === null;
+}
+
+function updateTimer() {
+  timerRemaining = Math.max(0, timerDeadline - Date.now());
+  if (timerRemaining === 0) {
+    window.clearInterval(timerInterval);
+    timerInterval = null;
+    timerStateEl.textContent = 'Time is up';
+  }
+  renderTimer();
+}
+
+function startTimer() {
+  if (timerInterval !== null || timerRemaining === 0) return;
+  timerDeadline = Date.now() + timerRemaining;
+  timerStateEl.textContent = 'Running';
+  timerInterval = window.setInterval(updateTimer, 250);
+  renderTimer();
+}
+
+function pauseTimer() {
+  if (timerInterval === null) return;
+  timerRemaining = Math.max(0, timerDeadline - Date.now());
+  window.clearInterval(timerInterval);
+  timerInterval = null;
+  timerStateEl.textContent = timerRemaining === 0 ? 'Time is up' : 'Paused';
+  renderTimer();
+}
+
+function resetTimer() {
+  window.clearInterval(timerInterval);
+  timerInterval = null;
+  timerRemaining = timerDuration;
+  timerStateEl.textContent = 'Ready';
+  renderTimer();
 }
 
 function renderMissions() {
@@ -197,13 +267,14 @@ async function loadMissions() {
 
   try {
     const response = await fetch(`${appConfig.apiUrl}?action=missions`);
-    const previousRowCount = await getResultsRowCount();
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
 
     const missions = await response.json();
-    state.missions = missions.length ? missions : defaultMissions;
+    state.missions = missions.length
+      ? missions.map(normalizeMission).sort(compareMissionOrder)
+      : defaultMissions;
     renderMissions();
     setStatus('Connected to Google Sheet');
   } catch (error) {
@@ -236,6 +307,15 @@ async function saveRun() {
   }
 
   try {
+    let previousRowCount = null;
+    try {
+      previousRowCount = await getResultsRowCount();
+    } catch (error) {
+      if (error.message !== 'Unknown action') {
+        throw error;
+      }
+    }
+
     const response = await fetch(appConfig.apiUrl, {
       method: 'POST',
       mode: 'no-cors',
@@ -246,6 +326,11 @@ async function saveRun() {
     });
 
     if (response.type === 'opaque') {
+      if (previousRowCount === null) {
+        setStatus('Save request sent. Check the Results sheet before saving again.');
+        return;
+      }
+
       const currentRowCount = await getResultsRowCount();
       const expectedRowCount = previousRowCount + payload.results.length;
       if (currentRowCount < expectedRowCount) {
@@ -293,6 +378,10 @@ if (runInput) {
 
 document.getElementById('resetRunButton').addEventListener('click', resetRun);
 document.getElementById('saveRunButton').addEventListener('click', saveRun);
+startTimerButton.addEventListener('click', startTimer);
+pauseTimerButton.addEventListener('click', pauseTimer);
+resetTimerButton.addEventListener('click', resetTimer);
 
 registerMissionHandlers();
+renderTimer();
 loadMissions();
