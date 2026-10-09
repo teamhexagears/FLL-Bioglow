@@ -257,14 +257,14 @@ class Robot:
             speed = -700
         else:
             speed = 700
-        await self.right_attachment.run_until_stalled(speed=speed, duty_limit=power)
+        await self.right_attachment.run_until_stalled(speed=speed, duty_limit=abs(power))
 
     async def left_attachment_reset(self, power=150):
         if power < 0:
             speed = -700
         else:
             speed = 700
-        await self.left_attachment.run_until_stalled(speed=speed, duty_limit=power)
+        await self.left_attachment.run_until_stalled(speed=speed, duty_limit=abs(power))
 
     async def both_attachment_turn(self,right_angle=0, left_angle=0, right_speed=100, left_speed=100, distance=0, move_speed=450):
         await multitask(
