@@ -6,7 +6,7 @@ from run4 import r4
 from run5 import r5
 from run6 import r6
 from run7 import r7
-from run8 import r8
+from run8 import r8, test
 from run9 import r9
 from run10 import r10
 from robot import Robot
@@ -15,7 +15,7 @@ from pybricks.parameters import Color
 
 robot = Robot()
 
-original = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+original = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0]
 options = original
 while True:
     # select list
@@ -42,6 +42,8 @@ while True:
         r9(robot)
     elif selected == 10:
         r10(robot)
+    elif selected == 0:
+        test(robot)
 
     robot.hub.light.on(Color.GREEN)
     

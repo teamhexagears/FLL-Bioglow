@@ -14,8 +14,9 @@ def test(robot):
 def r8(robot):
     robot.move(23)
     robot.turn(90)
-    run_task(robot.both_attachment_reset(distance=57.5, move_speed=300, left_speed=40, right_speed=40))
-    robot.left_attachment_turn(70)
+    #run_task(robot.both_attachment_reset(distance=57.5, move_speed=300, left_speed=40, right_speed=40))
+    robot.move(57.5)
+    robot.left_attachment_turn(37)
     robot.turn(67.5)
     robot.right_attachment_turn(-325)
     robot.turn(12)
