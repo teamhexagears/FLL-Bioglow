@@ -1,5 +1,5 @@
 # Team Blue - M12a + M12b
-# 1 and 1/3 black line from the left
+# 1 black line from the left
 
 if __name__ == "__main__":
     import main
