@@ -72,7 +72,7 @@ const defaultMissions = [
 ].map(normalizeMission).sort(compareMissionOrder);
 
 const appConfig = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycby1kE_tnNZbrzoi4tf4i84boeO5kXiVro_CsR17I2QRm0XjWWk2RT-ACv6AXGQmQZy5/exec'
+  apiUrl: 'https://script.google.com/macros/s/AKfycbz0jzrIy4KBrsc6PS0cEbon-ozOt4eg1R2k4m7OtUhm7J4byx4PchgYuzFSxlv_z8lD/exec'
 }
 
 const state = {
@@ -286,19 +286,31 @@ async function loadMissions() {
 }
 
 async function saveRun() {
+  const selectedMissions = state.missions.filter((mission) => Object.prototype.hasOwnProperty.call(state.results, mission.missionId));
+
+  if (!selectedMissions.length) {
+    setStatus('Select at least one mission before saving.', true);
+    return;
+  }
+
   const payload = {
     attemptNumber: getAttemptValue(),
     runNumber: getRunValue(),
-    results: state.missions.map((mission) => {
+    results: selectedMissions.map((mission) => {
       const result = state.results[mission.missionId];
-      return {
+      const row = {
         missionId: mission.missionId,
         missionName: mission.missionName,
         result: Boolean(result),
         score: getMissionScore(mission, result)
       };
+      console.log('Mission payload row:', row);
+      return row;
     })
   };
+
+  console.log('Saving payload to Apps Script:', payload);
+  setStatus('Sending data to Google Apps Script...');
 
   if (!appConfig.apiUrl) {
     console.log('Preview payload:', payload);
@@ -326,6 +338,8 @@ async function saveRun() {
     });
 
     const text = await response.text();
+    console.log('Apps Script raw response:', text);
+
     let data = {};
 
     try {
@@ -335,6 +349,8 @@ async function saveRun() {
       throw new Error('The server returned invalid JSON. Check the deployment and script code.');
     }
 
+    console.log('Parsed Apps Script response:', data);
+
     if (!response.ok || !data.ok) {
       throw new Error(data.message || 'Unable to save data');
     }
@@ -342,12 +358,15 @@ async function saveRun() {
     if (previousRowCount !== null) {
       const currentRowCount = await getResultsRowCount();
       const expectedRowCount = previousRowCount + payload.results.length;
+      console.log('Row count verification:', { previousRowCount, currentRowCount, expectedRowCount, sent: payload.results.length });
       if (currentRowCount < expectedRowCount) {
         throw new Error(`Save did not add the expected rows (${currentRowCount - previousRowCount} of ${payload.results.length}). Check Apps Script Executions.`);
       }
     }
 
-    setStatus(`Saved ${data.saved || payload.results.length} rows`);
+    const savedRows = data.saved || payload.results.length;
+    const rowLocation = data.startRow ? ` starting at sheet row ${data.startRow}` : '';
+    setStatus(`Saved ${savedRows} rows${rowLocation}`);
     resetRun();
   } catch (error) {
     console.error('Save failed:', error);

@@ -74,14 +74,9 @@ function setupResultsTab_(sheet, missionsSheet) {
   const missionIdRange = sheet.getRange(2, 3, TRACKER_ROWS, 1);
   const missionIdRule = SpreadsheetApp.newDataValidation()
     .requireValueInRange(missionsSheet.getRange('A2:A'), true)
-    .setAllowInvalid(false)
+    .setAllowInvalid(true)
     .build();
   missionIdRange.setDataValidation(missionIdRule);
-
-  const resultRule = SpreadsheetApp.newDataValidation()
-    .requireCheckbox()
-    .build();
-  sheet.getRange(2, 5, TRACKER_ROWS, 1).setDataValidation(resultRule);
 
   sheet.getRange('D2').setFormula(
     '=ARRAYFORMULA(IF(C2:C="","",IFNA(VLOOKUP(C2:C,Missions!A:B,2,FALSE),"Unknown mission")))'

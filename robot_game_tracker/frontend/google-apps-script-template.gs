@@ -38,6 +38,8 @@ function doPost(e) {
     const runNumber = Number(data.runNumber || 1);
     const results = Array.isArray(data.results) ? data.results : [];
 
+    console.log('Received payload:', JSON.stringify({ attemptNumber, runNumber, results }, null, 2));
+
     if (!results.length) {
       return ContentService.createTextOutput(JSON.stringify({ ok: false, message: 'No mission results were sent.' }))
         .setMimeType(ContentService.MimeType.JSON);
@@ -48,21 +50,55 @@ function doPost(e) {
       throw new Error('Results sheet not found. Please run the tracker setup first.');
     }
 
+    const missionsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Missions');
+    if (!missionsSheet) {
+      throw new Error('Missions sheet not found. Please run the tracker setup first.');
+    }
+    const missionIdsByKey = Object.create(null);
+    const missionLastRow = missionsSheet.getLastRow();
+    if (missionLastRow > 1) {
+      missionsSheet.getRange(2, 1, missionLastRow - 1, 1).getDisplayValues().forEach(function (row) {
+        const storedMissionId = String(row[0] || '').trim();
+        if (storedMissionId) {
+          missionIdsByKey[storedMissionId.toUpperCase()] = storedMissionId;
+        }
+      });
+    }
+
     const rows = results.map(function (mission) {
-      return [
+      const requestedMissionId = String(mission.missionId || '').trim().toUpperCase();
+      const storedMissionId = missionIdsByKey[requestedMissionId];
+      if (!storedMissionId) {
+        throw new Error('Mission ID "' + mission.missionId + '" was not found in the Missions sheet.');
+      }
+      const row = [
         attemptNumber,
         runNumber,
-        mission.missionId,
-        mission.missionName,
-        Boolean(mission.result),
-        Number(mission.score || 0)
+        storedMissionId,
+        mission.result === true
       ];
+      console.log('Prepared row for sheet:', JSON.stringify(row));
+      return row;
     });
 
     const startRow = sheet.getLastRow() + 1;
-    sheet.getRange(startRow, 1, rows.length, 6).setValues(rows);
+    sheet.getRange(startRow, 1, rows.length, 3).setValues(rows.map(function (row) {
+      return row.slice(0, 3);
+    }));
+    sheet.getRange(startRow, 5, rows.length, 1).setValues(rows.map(function (row) {
+      return [row[3]];
+    }));
+    SpreadsheetApp.flush();
+    const writtenRows = sheet.getRange(startRow, 1, rows.length, 6).getDisplayValues();
+    console.log('Read back rows from sheet:', JSON.stringify(writtenRows));
+    console.log('Wrote rows starting at row', startRow, 'total rows:', rows.length);
 
-    return ContentService.createTextOutput(JSON.stringify({ ok: true, saved: rows.length }))
+    return ContentService.createTextOutput(JSON.stringify({
+      ok: true,
+      saved: rows.length,
+      startRow: startRow,
+      writtenRows: writtenRows
+    }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (error) {
     return ContentService.createTextOutput(JSON.stringify({ ok: false, message: error.message }))
