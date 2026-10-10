@@ -72,7 +72,7 @@ const defaultMissions = [
 ].map(normalizeMission).sort(compareMissionOrder);
 
 const appConfig = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbzSt69ogfEqjZoEbsNqMsXc5JNY8VjBjgYKYLOAtBzaJ6Fw4WEu-Vf0ZOpk3gRuBip2/exec'
+  apiUrl: 'https://script.google.com/macros/s/AKfycby1kE_tnNZbrzoi4tf4i84boeO5kXiVro_CsR17I2QRm0XjWWk2RT-ACv6AXGQmQZy5/exec'
 }
 
 const state = {
@@ -318,29 +318,12 @@ async function saveRun() {
 
     const response = await fetch(appConfig.apiUrl, {
       method: 'POST',
-      mode: 'no-cors',
+      mode: 'cors',
       headers: {
         'Content-Type': 'text/plain;charset=utf-8'
       },
       body: JSON.stringify(payload)
     });
-
-    if (response.type === 'opaque') {
-      if (previousRowCount === null) {
-        setStatus('Save request sent. Check the Results sheet before saving again.');
-        return;
-      }
-
-      const currentRowCount = await getResultsRowCount();
-      const expectedRowCount = previousRowCount + payload.results.length;
-      if (currentRowCount < expectedRowCount) {
-        throw new Error(`Save did not add the expected rows (${currentRowCount - previousRowCount} of ${payload.results.length}). Check Apps Script Executions.`);
-      }
-
-      setStatus(`Saved ${payload.results.length} mission results to the Results sheet.`);
-      resetRun();
-      return;
-    }
 
     const text = await response.text();
     let data = {};
@@ -354,6 +337,14 @@ async function saveRun() {
 
     if (!response.ok || !data.ok) {
       throw new Error(data.message || 'Unable to save data');
+    }
+
+    if (previousRowCount !== null) {
+      const currentRowCount = await getResultsRowCount();
+      const expectedRowCount = previousRowCount + payload.results.length;
+      if (currentRowCount < expectedRowCount) {
+        throw new Error(`Save did not add the expected rows (${currentRowCount - previousRowCount} of ${payload.results.length}). Check Apps Script Executions.`);
+      }
     }
 
     setStatus(`Saved ${data.saved || payload.results.length} rows`);
