@@ -7,14 +7,13 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r7(robot):
-    run_task(robot.both_attachment_reset(distance=23, move_speed=450, left_power=-35, right_power=50))
+    run_task(robot.both_attachment_reset(distance=23, move_speed=450, left_power=-35, right_power=35))
     robot.turn(90)
     robot.move(55)
+    robot.left_attachment_turn(40)
     robot.turn(68)
     robot.move(8)
     run_task(robot.both_attachment_turn(right_angle=-120, left_angle=200, right_speed=400, left_speed=600, distance=0, move_speed=450))
-    # Go home? 
-
-    #robot.turn(-85)
-    #robot.move(-74)
-    #run_task(robot.both_attachment_reset(distance=123, speed=450, left_speed=150, right_speed=150))
+    robot.move(-11)
+    robot.turn(90)
+    robot.move(distance=95, speed=700)
