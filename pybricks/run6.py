@@ -1,5 +1,5 @@
 # Team Blue - M12a + M12b
-# 1 black line from the left
+# 1 thick black line from the left
 
 if __name__ == "__main__":
     import main
@@ -7,11 +7,12 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r6(robot):
-  #run_task(robot.both_attachment_reset(distance=44, move_speed=450, left_power=-40, right_power=-50))
-  robot.move(44)
-  robot.turn(41)
+  run_task(robot.both_attachment_reset(distance=44, move_speed=450, left_power=-40, right_power=-50))
+  #robot.move(44)
+  robot.turn (angle=41, speed=500)
   robot.move(17)
-  robot.left_attachment_turn(angle=145, speed=90)
+  robot.turn(10)
+  robot.left_attachment_turn(angle=160, speed=90)
   robot.right_attachment_turn(-5)
   robot.turn(65, speed=100)
   robot.move(-20)
