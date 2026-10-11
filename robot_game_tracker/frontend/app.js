@@ -2,26 +2,33 @@ function normalizeMission(mission) {
   const missionName = String(mission.missionName || '').trim();
   return {
     ...mission,
-    missionId: String(mission.missionId || '').toUpperCase(),
-    missionName: missionName ? missionName[0].toUpperCase() + missionName.slice(1) : missionName
+    missionId: String(mission.missionId || '').trim().toUpperCase(),
+    missionName: missionName ? missionName[0].toUpperCase() + missionName.slice(1) : missionName,
+    runNumber: mission.runNumber ?? 'N/A'
   };
 }
 
-const missionOrder = [
-  'M0', 'M3A', 'M3B', 'M2A', 'M2B', 'M2C', 'M5A', 'M5B', 'M8',
-  'M9A', 'M9B', 'M9C', 'M15A', 'M15B', 'M15C', 'M1A', 'M1B',
-  'M6A', 'M6B', 'M6C', 'M6D', 'M11A', 'M12A', 'M12B', 'M11B',
-  'M7A', 'M7B', 'M12C', 'M13', 'M14A', 'M14B', 'M14C', 'M14D', 'M14E',
-  'M14F', 'M14G', 'M14H', 'PT1', 'PT2', 'PT3', 'PT4', 'PT5', 'M10A', 'M10B'
-];
-const missionOrderIndex = new Map(missionOrder.map((missionId, index) => [missionId, index]));
+const defaultRunNumbers = {
+  m0: 'N/A', m1a: 5, m1b: 5, m2a: 2, m2b: 2, m2c: 2,
+  m3a: 1, m3b: 1, m5a: 2, m5b: 2,
+  m6a: 8, m6b: 8, m6c: 8, m6d: 8, m7a: 7, m7b: 7,
+  m8: 3, m9a: 3, m9b: 3, m9c: 3, m10a: 'N/A', m10b: 'N/A',
+  m11a: 5, m11b: 8, m12a: 6, m12b: 6, m12c: 7, m13: 8,
+  m14a: 9, m14b: 9, m14c: 9, m14d: 9, m14e: 9, m14f: 9, m14g: 9, m14h: 9,
+  m15a: 4, m15b: 4, m15c: 4,
+  pt1: 'N/A', pt2: 'N/A', pt3: 'N/A', pt4: 'N/A', pt5: 'N/A'
+};
+
+function getMissionRunOrder(mission) {
+  const value = String(mission.runNumber ?? '').trim();
+  const runNumber = Number(value);
+  return value && value.toUpperCase() !== 'N/A' && Number.isFinite(runNumber)
+    ? runNumber
+    : Number.POSITIVE_INFINITY;
+}
 
 function compareMissionOrder(firstMission, secondMission) {
-  const firstIndex = missionOrderIndex.get(firstMission.missionId);
-  const secondIndex = missionOrderIndex.get(secondMission.missionId);
-  if (firstIndex === undefined) return secondIndex === undefined ? 0 : 1;
-  if (secondIndex === undefined) return -1;
-  return firstIndex - secondIndex;
+  return getMissionRunOrder(firstMission) - getMissionRunOrder(secondMission);
 }
 
 const defaultMissions = [
@@ -69,7 +76,10 @@ const defaultMissions = [
   { missionId: 'pt3', missionName: 'is there at least three precision tokens?', noPoints: 0, yesPoints: 10 },
   { missionId: 'pt4', missionName: 'is there at least four precision tokens?', noPoints: 0, yesPoints: 10 },
   { missionId: 'pt5', missionName: 'is there at least five precision tokens?', noPoints: 0, yesPoints: 15 }
-].map(normalizeMission).sort(compareMissionOrder);
+].map((mission) => normalizeMission({
+  ...mission,
+  runNumber: defaultRunNumbers[mission.missionId] ?? 'N/A'
+})).sort(compareMissionOrder);
 
 const appConfig = {
   apiUrl: 'https://script.google.com/macros/s/AKfycbz0jzrIy4KBrsc6PS0cEbon-ozOt4eg1R2k4m7OtUhm7J4byx4PchgYuzFSxlv_z8lD/exec'

@@ -35,7 +35,7 @@ Then deploy your Apps Script project as a web app and paste the final URL there.
 
 ## Backend template
 
-A working Apps Script template is included in the project as `google-apps-script-template.gs`.
+A working Apps Script template is included in the project as `webapp.gs`.
 
 ## Run locally
 

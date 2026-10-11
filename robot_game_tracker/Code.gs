@@ -1,6 +1,6 @@
 const TRACKER_MISSIONS_SHEET = 'Missions';
 const TRACKER_RESULTS_SHEET = 'Results';
-const TRACKER_MISSION_HEADERS = ['Mission ID', 'Mission Name', 'No Points', 'Yes Points'];
+const TRACKER_MISSION_HEADERS = ['Mission ID', 'Run number', 'Mission Name', 'No Points', 'Yes Points'];
 const TRACKER_RESULT_HEADERS = [
   'Attempt Number',
   'Run Number',
@@ -50,9 +50,11 @@ function setupMissionsTab_(sheet) {
   styleTrackerHeader_(sheet, TRACKER_MISSION_HEADERS.length);
   sheet.setFrozenRows(1);
   sheet.setColumnWidth(1, 110);
-  sheet.setColumnWidth(2, 260);
-  sheet.setColumnWidths(3, 2, 120);
-  sheet.getRange(2, 3, TRACKER_ROWS, 2).setNumberFormat('0');
+  sheet.setColumnWidth(2, 90);
+  sheet.setColumnWidth(3, 260);
+  sheet.setColumnWidths(4, 2, 120);
+  sheet.getRange(2, 2, TRACKER_ROWS, 1).setNumberFormat('0');
+  sheet.getRange(2, 4, TRACKER_ROWS, 2).setNumberFormat('0');
   createFilterIfMissing_(sheet.getRange(1, 1, TRACKER_ROWS + 1, TRACKER_MISSION_HEADERS.length));
 }
 
@@ -79,10 +81,10 @@ function setupResultsTab_(sheet, missionsSheet) {
   missionIdRange.setDataValidation(missionIdRule);
 
   sheet.getRange('D2').setFormula(
-    '=ARRAYFORMULA(IF(C2:C="","",IFNA(VLOOKUP(C2:C,Missions!A:B,2,FALSE),"Unknown mission")))'
+    '=ARRAYFORMULA(IF(C2:C="","",IFNA(VLOOKUP(C2:C,Missions!A:C,3,FALSE),"Unknown mission")))'
   );
   sheet.getRange('F2').setFormula(
-    '=ARRAYFORMULA(IF(C2:C="","",IF(E2:E="","",IFNA(IF(E2:E,VLOOKUP(C2:C,Missions!A:D,4,FALSE),VLOOKUP(C2:C,Missions!A:D,3,FALSE)),""))))'
+    '=ARRAYFORMULA(IF(C2:C="","",IF(E2:E="","",IFNA(IF(E2:E,VLOOKUP(C2:C,Missions!A:E,5,FALSE),VLOOKUP(C2:C,Missions!A:E,4,FALSE)),""))))'
   );
 
   createFilterIfMissing_(sheet.getRange(1, 1, TRACKER_ROWS + 1, TRACKER_RESULT_HEADERS.length));

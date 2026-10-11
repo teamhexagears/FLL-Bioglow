@@ -120,6 +120,7 @@ function getMissionLookup_() {
 
   const headers = values[0];
   const missionIndex = headers.indexOf('Mission ID');
+  const runIndex = headers.indexOf('Run number');
   const nameIndex = headers.indexOf('Mission Name');
   const noPointsIndex = headers.indexOf('No Points');
   const yesPointsIndex = headers.indexOf('Yes Points');
@@ -133,6 +134,7 @@ function getMissionLookup_() {
     .map(function (row) {
       return {
         missionId: String(row[missionIndex]),
+        runNumber: runIndex === -1 || row[runIndex] === '' ? 'N/A' : String(row[runIndex]),
         missionName: String(row[nameIndex]),
         noPoints: Number(row[noPointsIndex] || 0),
         yesPoints: Number(row[yesPointsIndex] || 0)
