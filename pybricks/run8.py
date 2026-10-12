@@ -1,5 +1,6 @@
 # green team
 # M13 + M6 (ant)
+# Starting positin 1 thick from the left
 
 if __name__ == "__main__":
     import main
@@ -7,7 +8,7 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r8(robot):
-    robot.move(75)
+    run_task(robot.both_attachment_reset(distance=75, move_speed=500, left_power=0, right_power=50))
     robot.turn(45)
     robot.move(7.5)
     robot.right_attachment_turn(-250, 300)
