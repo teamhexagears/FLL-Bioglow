@@ -82,18 +82,14 @@ const defaultMissions = [
 })).sort(compareMissionOrder);
 
 const appConfig = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbz0jzrIy4KBrsc6PS0cEbon-ozOt4eg1R2k4m7OtUhm7J4byx4PchgYuzFSxlv_z8lD/exec'
+  apiUrl: 'https://script.google.com/macros/s/AKfycbzg5cw3cuGYDSEowOU-fI3qazObjULvlHziRb0S1_dfcusAppXm4IJw5HJrCbLDHXjb/exec'
 }
 
 const state = {
   missions: [],
-  results: {},
-  attempt: 1,
-  run: 1
+  results: {}
 };
 
-const attemptInput = document.getElementById('attemptNumber');
-const runInput = document.getElementById('runNumber');
 const missionList = document.getElementById('missionList');
 const currentScoreEl = document.getElementById('currentScore');
 const completedCountEl = document.getElementById('completedCount');
@@ -108,20 +104,6 @@ const timerDuration = 2 * 60 * 1000 + 30 * 1000;
 let timerRemaining = timerDuration;
 let timerDeadline = 0;
 let timerInterval = null;
-
-function getAttemptValue() {
-  if (!attemptInput) {
-    return state.attempt;
-  }
-  return Number(attemptInput.value) || state.attempt;
-}
-
-function getRunValue() {
-  if (!runInput) {
-    return state.run;
-  }
-  return Number(runInput.value) || state.run;
-}
 
 function getMissionScore(mission, result) {
   const answer = result === true;
@@ -304,8 +286,6 @@ async function saveRun() {
   }
 
   const payload = {
-    attemptNumber: getAttemptValue(),
-    runNumber: getRunValue(),
     results: selectedMissions.map((mission) => {
       const result = state.results[mission.missionId];
       const row = {
@@ -375,25 +355,18 @@ async function saveRun() {
     }
 
     const savedRows = data.saved || payload.results.length;
-    const rowLocation = data.startRow ? ` starting at sheet row ${data.startRow}` : '';
-    setStatus(`Saved ${savedRows} rows${rowLocation}`);
-    resetRun();
+    const completionUrl = new URL('save-complete.html', window.location.href);
+    completionUrl.searchParams.set('saved', String(savedRows));
+    const runNumbers = [...new Set(selectedMissions.map((mission) => String(mission.runNumber ?? 'N/A').trim()).filter(Boolean))];
+    completionUrl.searchParams.set('runs', runNumbers.join(', '));
+    if (data.startRow) {
+      completionUrl.searchParams.set('startRow', String(data.startRow));
+    }
+    window.location.assign(completionUrl);
   } catch (error) {
     console.error('Save failed:', error);
     setStatus(error.message || 'Save failed. Check the Apps Script URL.', true);
   }
-}
-
-if (attemptInput) {
-  attemptInput.addEventListener('input', (event) => {
-    state.attempt = Number(event.target.value) || 1;
-  });
-}
-
-if (runInput) {
-  runInput.addEventListener('input', (event) => {
-    state.run = Number(event.target.value) || 1;
-  });
 }
 
 document.getElementById('resetRunButton').addEventListener('click', () => {

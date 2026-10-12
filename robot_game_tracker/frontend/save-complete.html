@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Save Complete | FLL Bioglow</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell completion-shell">
+      <section class="panel completion-panel" aria-labelledby="completionTitle">
+        <p class="eyebrow">FLL Bioglow Results Tracker</p>
+        <h1 id="completionTitle">Save complete</h1>
+        <p id="completionMessage" class="completion-message" aria-live="polite">Your results were saved to the Results sheet.</p>
+
+        <div class="completion-details">
+          <div class="completion-detail">
+            <span>Mission results saved</span>
+            <strong id="savedCount">Confirmed</strong>
+          </div>
+          <div class="completion-detail" id="sheetRowDetail" hidden>
+            <span>Results sheet row</span>
+            <strong id="sheetRow">-</strong>
+          </div>
+        </div>
+
+        <a class="primary-button completion-link" href="index.html">Back to tracker</a>
+      </section>
+    </main>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const savedCount = Number(params.get('saved'));
+      const startRow = Number(params.get('startRow'));
+      const runNumbers = params.get('runs');
+
+      if (Number.isFinite(savedCount) && savedCount > 0) {
+        document.getElementById('savedCount').textContent = savedCount;
+      }
+
+      if (runNumbers) {
+        document.getElementById('completionMessage').textContent = `Mission run number(s) ${runNumbers} from the Missions tab were saved to Results.`;
+      }
+
+      if (Number.isFinite(startRow) && startRow > 0 && Number.isFinite(savedCount) && savedCount > 0) {
+        const lastRow = startRow + savedCount - 1;
+        document.getElementById('sheetRow').textContent = startRow === lastRow ? String(startRow) : `${startRow}-${lastRow}`;
+        document.getElementById('sheetRowDetail').hidden = false;
+      }
+    </script>
+  </body>
+</html>

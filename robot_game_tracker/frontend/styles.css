@@ -369,9 +369,71 @@ h2 {
   justify-content: center;
 }
 
+.completion-shell {
+  min-height: calc(100vh - 64px);
+  display: grid;
+  align-content: center;
+}
+
+.completion-panel {
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: 32px;
+  border-top: 5px solid var(--success);
+}
+
+.completion-panel h2 {
+  margin: 0 0 12px;
+  font-size: 1.8rem;
+}
+
+.completion-message {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.completion-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.completion-detail {
+  padding: 14px;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.completion-detail span,
+.completion-detail strong {
+  display: block;
+}
+
+.completion-detail span {
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.completion-link {
+  display: inline-flex;
+  text-decoration: none;
+}
+
 @media (max-width: 640px) {
   .app-shell {
     padding: 16px;
+  }
+
+  .completion-shell {
+    min-height: calc(100vh - 32px);
+  }
+
+  .completion-panel {
+    padding: 22px;
   }
 
   .topbar,

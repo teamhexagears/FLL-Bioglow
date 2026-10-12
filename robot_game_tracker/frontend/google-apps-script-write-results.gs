@@ -12,8 +12,6 @@ function doPost(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    const attemptNumber = Number(payload.attemptNumber || 1);
-    const runNumber = Number(payload.runNumber || 1);
     const results = Array.isArray(payload.results) ? payload.results : [];
 
     if (!results.length) {
@@ -34,38 +32,73 @@ function doPost(e) {
     if (!missionsSheet) {
       throw new Error('Missions sheet not found. Create a Missions tab first.');
     }
-    const missionIdsByKey = Object.create(null);
+    const missionsByKey = Object.create(null);
     const missionLastRow = missionsSheet.getLastRow();
     if (missionLastRow > 1) {
-      missionsSheet.getRange(2, 1, missionLastRow - 1, 1).getDisplayValues().forEach(function (row) {
+      missionsSheet.getRange(2, 1, missionLastRow - 1, 5).getValues().forEach(function (row) {
         const storedMissionId = String(row[0] || '').trim();
         if (storedMissionId) {
-          missionIdsByKey[storedMissionId.toUpperCase()] = storedMissionId;
+          missionsByKey[storedMissionId.toUpperCase()] = {
+            missionId: storedMissionId,
+            runNumber: row[1] === '' || row[1] === null ? 'N/A' : row[1],
+            missionName: String(row[2] || '').trim(),
+            noPoints: Number(row[3] || 0),
+            yesPoints: Number(row[4] || 0)
+          };
         }
       });
     }
 
+    const previousLastRow = sheet.getLastRow();
+    if (previousLastRow > 1) {
+      const existingRows = sheet.getRange(2, 1, previousLastRow - 1, 5).getValues();
+      clearDerivedFormulaAnchors_(sheet, previousLastRow);
+      const derivedColumns = existingRows.map(function (row) {
+        const missionId = String(row[2] || '').trim().toUpperCase();
+        const mission = missionsByKey[missionId];
+        const hasResult = row[4] !== '' && row[4] !== null;
+        const answer = row[4] === true || String(row[4]).toUpperCase() === 'TRUE';
+        return [
+          mission ? mission.runNumber : row[1],
+          missionId ? (mission ? mission.missionName : 'Unknown mission') : '',
+          hasResult && mission ? (answer ? mission.yesPoints : mission.noPoints) : ''
+        ];
+      });
+      sheet.getRange(2, 2, derivedColumns.length, 1).setValues(derivedColumns.map(function (row) {
+        return [row[0]];
+      }));
+      sheet.getRange(2, 4, derivedColumns.length, 1).setValues(derivedColumns.map(function (row) {
+        return [row[1]];
+      }));
+      sheet.getRange(2, 6, derivedColumns.length, 1).setValues(derivedColumns.map(function (row) {
+        return [row[2]];
+      }));
+    }
+
+    const attemptNumber = getNextAttemptNumber_(sheet);
     const rows = results.map(function (mission) {
       const requestedMissionId = String(mission.missionId || '').trim().toUpperCase();
-      const storedMissionId = missionIdsByKey[requestedMissionId];
-      if (!storedMissionId) {
+      const missionDetails = missionsByKey[requestedMissionId];
+      if (!missionDetails) {
         throw new Error('Mission ID "' + mission.missionId + '" was not found in the Missions sheet.');
       }
+      if (!missionDetails.missionName) {
+        throw new Error('Mission ID "' + missionDetails.missionId + '" has no mission name in the Missions sheet.');
+      }
+      const answer = mission.result === true;
       return [
         attemptNumber,
-        runNumber,
-        storedMissionId,
-        mission.result === true
+        missionDetails.runNumber,
+        missionDetails.missionId,
+        missionDetails.missionName,
+        answer,
+        answer ? missionDetails.yesPoints : missionDetails.noPoints
       ];
     });
 
-    const startRow = sheet.getLastRow() + 1;
-    sheet.getRange(startRow, 1, rows.length, 3).setValues(rows.map(function (row) {
-      return row.slice(0, 3);
-    }));
-    sheet.getRange(startRow, 5, rows.length, 1).setValues(rows.map(function (row) {
-      return [row[3]];
-    }));
+    const startRow = 2;
+    sheet.insertRowsBefore(startRow, rows.length);
+    sheet.getRange(startRow, 1, rows.length, 6).setValues(rows);
     SpreadsheetApp.flush();
     const writtenRows = sheet.getRange(startRow, 1, rows.length, 6).getDisplayValues();
 
@@ -81,4 +114,34 @@ function doPost(e) {
       message: error.message
     })).setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+function clearDerivedFormulaAnchors_(sheet, lastRow) {
+  [4, 6].forEach(function (column) {
+    const formulas = sheet.getRange(2, column, lastRow - 1, 1).getFormulas();
+    formulas.forEach(function (row, index) {
+      if (row[0]) {
+        sheet.getRange(index + 2, column).clearContent();
+      }
+    });
+  });
+}
+
+function getNextAttemptNumber_(resultsSheet) {
+  const lastRow = resultsSheet.getLastRow();
+  if (lastRow <= 1) {
+    return 1;
+  }
+
+  const values = resultsSheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  let highestAttempt = 0;
+
+  values.forEach(function (row) {
+    const value = Number(row[0]);
+    if (!Number.isNaN(value) && value > highestAttempt) {
+      highestAttempt = value;
+    }
+  });
+
+  return highestAttempt > 0 ? highestAttempt + 1 : 1;
 }

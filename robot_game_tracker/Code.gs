@@ -80,13 +80,6 @@ function setupResultsTab_(sheet, missionsSheet) {
     .build();
   missionIdRange.setDataValidation(missionIdRule);
 
-  sheet.getRange('D2').setFormula(
-    '=ARRAYFORMULA(IF(C2:C="","",IFNA(VLOOKUP(C2:C,Missions!A:C,3,FALSE),"Unknown mission")))'
-  );
-  sheet.getRange('F2').setFormula(
-    '=ARRAYFORMULA(IF(C2:C="","",IF(E2:E="","",IFNA(IF(E2:E,VLOOKUP(C2:C,Missions!A:E,5,FALSE),VLOOKUP(C2:C,Missions!A:E,4,FALSE)),""))))'
-  );
-
   createFilterIfMissing_(sheet.getRange(1, 1, TRACKER_ROWS + 1, TRACKER_RESULT_HEADERS.length));
 }
 
