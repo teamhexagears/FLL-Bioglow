@@ -1,5 +1,5 @@
 # Team Red - M2 + M5
-# Starting position??
+# Starting position:
 
 if __name__ == "__main__":
     import main
@@ -7,7 +7,7 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r2(robot):
-    run_task(robot.left_attachment_reset(distance=70))
+    run_task(robot.left_attachment_reset(70))
     robot.left_attachment_turn(-97)
     robot.move(4)
     robot.turn(48)

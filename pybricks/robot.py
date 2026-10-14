@@ -198,42 +198,25 @@ class Robot:
         self.drive_base.stop()
         
 
-    def curve_move(self, speed, straight_distance, turn_distance):
-        print('1')
-        heading = 0
+    async def curve_move(self, speed=300, radius=600, distance=100, left_angle=0, right_angle=0):
         self.drive_base.reset(0,0)
         self.drive_base.settings(speed)
-        # check if one of them is 0
-        if turn_distance == 0 or straight_distance == 0:
-            print("straight_distance or turn_distance cannot be 0!!!")
-            return
-        print('2')
-        # Calculate the circle radius and arc angle to hit the (x, y) target
-        radius = sqrt((turn_distance *10) ** 2 + (straight_distance *10)** 2)
-        ## AI wrote this - radius = (turn_distance ** 2 + straight_distance ** 2) / (2 * turn_distance)
-        arc_angle = atan2(straight_distance *10 , turn_distance*10)*100
-        print("R: " + str(radius))
-        print("A: " + str(arc_angle))
-        #self.drive_base.arc(radius=radius, angle=arc_angle)
-        self.drive_base.arc(radius=straight_distance*10, angle=90)
-
-        print('4')
-        heading = 90-(self.hub.imu.heading())
-        if straight_distance < 0:
-            heading -= 180
-        self.drive_base.turn(heading)
-        self.stop()
-
-    async def left_attachment_while_move(self, left_angle=0, left_speed=100, distance=0):
         await multitask(
-            self.parallel_left_attachment_turn(left_angle, left_speed),
-            self.parallel_move(distance*10)
+            self.drive_base.arc(radius=radius, distance=distance*10),
+            self.parallel_left_attachment_turn(angle=left_angle),
+            self.parallel_right_attachment_turn(angle=right_angle)
         )
 
-    async def right_attachment_while_move(self, right_angle=0, right_speed=100, distance=0,):
+    async def left_attachment_while_move(self, left_angle=0, left_speed=100, distance=0, move_speed=450):
+        await multitask(
+            self.parallel_left_attachment_turn(left_angle, left_speed),
+            self.parallel_move(distance, move_speed)
+        )
+
+    async def right_attachment_while_move(self, right_angle=0, right_speed=100, distance=0, move_speed=450):
         await multitask(
             self.parallel_right_attachment_turn(right_angle, right_speed),
-            self.parallel_move(distance*10)
+            self.parallel_move(distance, move_speed)
         )
 
 
