@@ -17,6 +17,10 @@
 
 ## Current status
 - Front-end no longer asks for a global run number; the backend looks up the correct run number for each mission.
+- Confirmed the current index.html contains no Run Number input; the request is already reflected in the frontend.
+- Mission checklist now groups mission cards into one labeled row per run number, with the N/A group displayed last.
+- Save button disables immediately and shows "Saving..." to prevent duplicate submissions; it re-enables after validation or request failure.
+- Added a separate in-flight guard and cache-busting version to the app.js script URL so browsers fetch the updated duplicate-save protection after the frontend is republished.
 - Apps Script logic is in place for saving results and auto-generating the attempt number.
 - New results are inserted at row 2 so the latest run appears at the top of the Results sheet.
 - A live redeploy of the Google Apps Script web app is required for the change to take effect.

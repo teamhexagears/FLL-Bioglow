@@ -95,6 +95,7 @@ const currentScoreEl = document.getElementById('currentScore');
 const completedCountEl = document.getElementById('completedCount');
 const missionCountEl = document.getElementById('missionCount');
 const saveStatusEl = document.getElementById('saveStatus');
+const saveRunButton = document.getElementById('saveRunButton');
 const timerDisplayEl = document.getElementById('timerDisplay');
 const timerStateEl = document.getElementById('timerState');
 const startTimerButton = document.getElementById('startTimerButton');
@@ -104,6 +105,7 @@ const timerDuration = 2 * 60 * 1000 + 30 * 1000;
 let timerRemaining = timerDuration;
 let timerDeadline = 0;
 let timerInterval = null;
+let saveInProgress = false;
 
 function getMissionScore(mission, result) {
   const answer = result === true;
@@ -182,35 +184,67 @@ function resetTimer() {
 function renderMissions() {
   missionList.innerHTML = '';
 
+  const missionsByRun = new Map();
   state.missions.forEach((mission) => {
-    const card = document.createElement('article');
-    card.className = 'mission-card';
+    const value = String(mission.runNumber ?? '').trim();
+    const runNumber = value && value.toUpperCase() !== 'N/A' ? value : 'N/A';
+    if (!missionsByRun.has(runNumber)) {
+      missionsByRun.set(runNumber, []);
+    }
+    missionsByRun.get(runNumber).push(mission);
+  });
 
-    const selectedResult = state.results[mission.missionId];
-    const statusText = selectedResult === true ? 'Yes' : selectedResult === false ? 'No' : 'Pending';
-    const statusClass = selectedResult === true ? 'yes' : selectedResult === false ? 'no' : '';
+  const runGroups = [...missionsByRun.entries()].sort(([firstRun], [secondRun]) => {
+    if (firstRun === 'N/A') return 1;
+    if (secondRun === 'N/A') return -1;
+    return Number(firstRun) - Number(secondRun);
+  });
 
-    card.innerHTML = `
-      <div class="mission-top">
-        <span class="mission-id">${mission.missionId}</span>
-        <span class="mission-name">${mission.missionName}</span>
-      </div>
-      <div class="score-strip">
-        <span>No: ${mission.noPoints}</span>
-        <span>Yes: ${mission.yesPoints}</span>
-      </div>
-      <div class="status-badge ${statusClass}">${statusText}</div>
-      <div class="answer-row">
-        <button class="answer-button no ${selectedResult === false ? 'selected' : 'inactive'}" type="button" data-mission-id="${mission.missionId}" data-answer="false">
-          No
-        </button>
-        <button class="answer-button yes ${selectedResult === true ? 'selected' : 'inactive'}" type="button" data-mission-id="${mission.missionId}" data-answer="true">
-          Yes
-        </button>
-      </div>
-    `;
+  runGroups.forEach(([runNumber, missions]) => {
+    const runRow = document.createElement('section');
+    runRow.className = 'run-row';
+    runRow.setAttribute('aria-label', `Run ${runNumber} missions`);
 
-    missionList.appendChild(card);
+    const heading = document.createElement('h3');
+    heading.className = 'run-heading';
+    heading.textContent = runNumber === 'N/A' ? 'N/A' : `Run ${runNumber}`;
+
+    const runMissionList = document.createElement('div');
+    runMissionList.className = 'run-missions';
+
+    missions.forEach((mission) => {
+      const card = document.createElement('article');
+      card.className = 'mission-card';
+
+      const selectedResult = state.results[mission.missionId];
+      const statusText = selectedResult === true ? 'Yes' : selectedResult === false ? 'No' : 'Pending';
+      const statusClass = selectedResult === true ? 'yes' : selectedResult === false ? 'no' : '';
+
+      card.innerHTML = `
+        <div class="mission-top">
+          <span class="mission-id">${mission.missionId}</span>
+          <span class="mission-name">${mission.missionName}</span>
+        </div>
+        <div class="score-strip">
+          <span>No: ${mission.noPoints}</span>
+          <span>Yes: ${mission.yesPoints}</span>
+        </div>
+        <div class="status-badge ${statusClass}">${statusText}</div>
+        <div class="answer-row">
+          <button class="answer-button no ${selectedResult === false ? 'selected' : 'inactive'}" type="button" data-mission-id="${mission.missionId}" data-answer="false">
+            No
+          </button>
+          <button class="answer-button yes ${selectedResult === true ? 'selected' : 'inactive'}" type="button" data-mission-id="${mission.missionId}" data-answer="true">
+            Yes
+          </button>
+        </div>
+      `;
+
+      runMissionList.appendChild(card);
+    });
+
+    runRow.append(heading, runMissionList);
+    missionList.appendChild(runRow);
   });
 
   updateTotals();
@@ -278,10 +312,21 @@ async function loadMissions() {
 }
 
 async function saveRun() {
+  if (saveInProgress) {
+    return;
+  }
+
+  saveInProgress = true;
+  saveRunButton.disabled = true;
+  saveRunButton.textContent = 'Saving...';
+
   const selectedMissions = state.missions.filter((mission) => Object.prototype.hasOwnProperty.call(state.results, mission.missionId));
 
   if (!selectedMissions.length) {
     setStatus('Select at least one mission before saving.', true);
+    saveInProgress = false;
+    saveRunButton.disabled = false;
+    saveRunButton.textContent = 'Save Run to Google Sheet';
     return;
   }
 
@@ -305,6 +350,9 @@ async function saveRun() {
   if (!appConfig.apiUrl) {
     console.log('Preview payload:', payload);
     setStatus('Front-end demo mode: save is ready for backend hookup');
+    saveInProgress = false;
+    saveRunButton.disabled = false;
+    saveRunButton.textContent = 'Save Run to Google Sheet';
     return;
   }
 
@@ -366,6 +414,9 @@ async function saveRun() {
   } catch (error) {
     console.error('Save failed:', error);
     setStatus(error.message || 'Save failed. Check the Apps Script URL.', true);
+    saveInProgress = false;
+    saveRunButton.disabled = false;
+    saveRunButton.textContent = 'Save Run to Google Sheet';
   }
 }
 
@@ -375,7 +426,7 @@ document.getElementById('resetRunButton').addEventListener('click', () => {
     resetRun();
   }
 });
-document.getElementById('saveRunButton').addEventListener('click', saveRun);
+saveRunButton.addEventListener('click', saveRun);
 startTimerButton.addEventListener('click', startTimer);
 pauseTimerButton.addEventListener('click', pauseTimer);
 resetTimerButton.addEventListener('click', resetTimer);

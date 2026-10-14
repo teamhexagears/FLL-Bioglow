@@ -124,6 +124,13 @@ h2 {
   box-shadow: 0 8px 18px rgba(31, 122, 77, 0.2);
 }
 
+.primary-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+  transform: none;
+  box-shadow: none;
+}
+
 .secondary-button {
   background: #fff;
   color: var(--primary-dark);
@@ -262,6 +269,33 @@ h2 {
 }
 
 .mission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.run-row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.run-row:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.run-heading {
+  margin: 0;
+  padding-top: 14px;
+  color: var(--primary-dark);
+  font-size: 1rem;
+}
+
+.run-missions {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
@@ -434,6 +468,15 @@ h2 {
 
   .completion-panel {
     padding: 22px;
+  }
+
+  .run-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .run-heading {
+    padding-top: 0;
   }
 
   .topbar,
