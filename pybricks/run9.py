@@ -7,7 +7,16 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r9(robot):
-    robot.move(45)
+    robot.move(46)
     robot.right_attachment_turn(120)
-    robot.thrust(7, 800)
-    robot.move(-45)
+    robot.thrust(distance=7, speed=800)
+    robot.right_attachment_turn(-120)
+    robot.thrust(distance=-7, speed=800)
+    for i in range(3):
+        robot.thrust(distance=8, speed=800)
+        robot.turn(15)
+        robot.turn(-30)
+        robot.turn(30)
+        robot.turn(-30)
+        robot.turn(15)
+        robot.thrust(distance=-8, speed=800)
