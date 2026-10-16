@@ -23,6 +23,7 @@
 - Removed the edge-connected white backdrop from favicon.ico and kept the enclosed white center of the Hexa Gears logo. The ICO now contains six standard resolutions with transparent corners.
 - Added a separate in-flight guard and cache-busting version to the app.js script URL so browsers fetch the updated duplicate-save protection after the frontend is republished.
 - Timer now continues into negative overtime after reaching zero, displays a minus sign, and can be paused, resumed, or reset during overtime.
+- Mission answer clicks before the timer has ever started show the requested alert and do not record an answer; the timer Reset button clears this started state.
 - Mission answer clicks are measured at millisecond precision, then saved as seconds rounded to three decimal places in Results columns G and H. Legacy millisecond values are converted when the headers are migrated.
 - The first mission click records its elapsed time in both timing columns. Missions whose run number is N/A record N/A in both timing columns, including existing rows repaired on save.
 - Backend now rejects missing timing fields with an explicit deployment/frontend update error instead of silently writing zero; measured zero values remain valid.
