@@ -47,6 +47,7 @@ function doPost(e) {
     if (!sheet) {
       throw new Error('Results sheet not found. Please run the tracker setup first.');
     }
+    ensureTimingHeaders_(sheet);
 
     const missionsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Missions');
     if (!missionsSheet) {
@@ -71,17 +72,20 @@ function doPost(e) {
 
     const previousLastRow = sheet.getLastRow();
     if (previousLastRow > 1) {
-      const existingRows = sheet.getRange(2, 1, previousLastRow - 1, 5).getValues();
+      const existingRows = sheet.getRange(2, 1, previousLastRow - 1, 8).getValues();
       clearDerivedFormulaAnchors_(sheet, previousLastRow);
       const derivedColumns = existingRows.map(function (row) {
         const missionId = String(row[2] || '').trim().toUpperCase();
         const mission = missionsByKey[missionId];
+        const isNoScheduledRun = mission && String(mission.runNumber).trim().toUpperCase() === 'N/A';
         const hasResult = row[4] !== '' && row[4] !== null;
         const answer = row[4] === true || String(row[4]).toUpperCase() === 'TRUE';
         return [
           mission ? mission.runNumber : row[1],
           missionId ? (mission ? mission.missionName : 'Unknown mission') : '',
-          hasResult && mission ? (answer ? mission.yesPoints : mission.noPoints) : ''
+          hasResult && mission ? (answer ? mission.yesPoints : mission.noPoints) : '',
+          isNoScheduledRun ? 'N/A' : row[6],
+          isNoScheduledRun ? 'N/A' : row[7]
         ];
       });
       sheet.getRange(2, 2, derivedColumns.length, 1).setValues(derivedColumns.map(function (row) {
@@ -92,6 +96,9 @@ function doPost(e) {
       }));
       sheet.getRange(2, 6, derivedColumns.length, 1).setValues(derivedColumns.map(function (row) {
         return [row[2]];
+      }));
+      sheet.getRange(2, 7, derivedColumns.length, 2).setValues(derivedColumns.map(function (row) {
+        return [row[3], row[4]];
       }));
     }
 
@@ -106,21 +113,29 @@ function doPost(e) {
         throw new Error('Mission ID "' + missionDetails.missionId + '" has no mission name in the Missions sheet.');
       }
       const answer = mission.result === true;
+      const isNoScheduledRun = String(missionDetails.runNumber).trim().toUpperCase() === 'N/A';
+      const elapsedSeconds = isNoScheduledRun ? 'N/A' : Number(mission.elapsedSeconds);
+      const sincePreviousSeconds = isNoScheduledRun ? 'N/A' : Number(mission.sincePreviousSeconds);
+      if (!isNoScheduledRun && (!Number.isFinite(elapsedSeconds) || !Number.isFinite(sincePreviousSeconds))) {
+        throw new Error('Timing data is missing for mission "' + missionDetails.missionId + '". Reload the latest frontend and redeploy the Apps Script backend.');
+      }
       return [
         attemptNumber,
         missionDetails.runNumber,
         missionDetails.missionId,
         missionDetails.missionName,
         answer,
-        answer ? missionDetails.yesPoints : missionDetails.noPoints
+        answer ? missionDetails.yesPoints : missionDetails.noPoints,
+        isNoScheduledRun ? 'N/A' : Math.round(elapsedSeconds * 1000) / 1000,
+        isNoScheduledRun ? 'N/A' : Math.round(sincePreviousSeconds * 1000) / 1000
       ];
     });
 
     const startRow = 2;
     sheet.insertRowsBefore(startRow, rows.length);
-    sheet.getRange(startRow, 1, rows.length, 6).setValues(rows);
+    sheet.getRange(startRow, 1, rows.length, 8).setValues(rows);
     SpreadsheetApp.flush();
-    const writtenRows = sheet.getRange(startRow, 1, rows.length, 6).getDisplayValues();
+    const writtenRows = sheet.getRange(startRow, 1, rows.length, 8).getDisplayValues();
     console.log('Read back rows from sheet:', JSON.stringify(writtenRows));
     console.log('Wrote rows starting at row', startRow, 'total rows:', rows.length);
 
@@ -135,6 +150,43 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({ ok: false, message: error.message }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+function ensureTimingHeaders_(sheet) {
+  const expectedHeaders = ['Elapsed Time (seconds)', 'Since Previous Mission (seconds)'];
+  const legacyHeaders = ['Elapsed Time (ms)', 'Since Previous Mission (ms)'];
+  const headerRange = sheet.getRange(1, 7, 1, expectedHeaders.length);
+  const currentHeaders = headerRange.getDisplayValues()[0];
+  const allBlank = currentHeaders.every(function (value) { return value === ''; });
+  const matches = expectedHeaders.every(function (header, index) {
+    return currentHeaders[index] === header;
+  });
+  const legacyMatches = legacyHeaders.every(function (header, index) {
+    return currentHeaders[index] === header;
+  });
+
+  if (allBlank) {
+    headerRange.setValues([expectedHeaders]);
+  } else if (legacyMatches) {
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      const timingRange = sheet.getRange(2, 7, lastRow - 1, 2);
+      const values = timingRange.getValues().map(function (row) {
+        return row.map(function (value) {
+          const milliseconds = Number(value);
+          return value === '' || value === null || !Number.isFinite(milliseconds)
+            ? value
+            : Math.round(milliseconds) / 1000;
+        });
+      });
+      timingRange.setValues(values);
+    }
+    headerRange.setValues([expectedHeaders]);
+  } else if (!matches) {
+    throw new Error('Results columns G and H must be blank or have the timing headers.');
+  }
+
+  sheet.getRange(2, 7, Math.max(sheet.getMaxRows() - 1, 1), 2).setNumberFormat('0.000');
 }
 
 function clearDerivedFormulaAnchors_(sheet, lastRow) {

@@ -2,8 +2,8 @@
 
 This setup creates two tabs in a Google Sheet:
 
-- **Missions**: `Mission ID`, `Mission Name`, `No Points`, `Yes Points`. Add one row per mission and enter the points for each answer.
-- **Results**: `Attempt Number`, `Run Number`, `Mission ID`, `Mission Name`, `Result`, `Score`. Record one row for each mission in each run. Select the mission ID and use the checkbox for the result; the mission name and score fill from the lookup tab.
+- **Missions**: `Mission ID`, `Run number`, `Mission Name`, `No Points`, `Yes Points`. Add one row per mission and enter its run number and points for each answer.
+- **Results**: `Attempt Number`, `Run Number`, `Mission ID`, `Mission Name`, `Result`, `Score`, `Elapsed Time (seconds)`, `Since Previous Mission (seconds)`. Timing values are rounded to three decimal places; the first mission uses its elapsed time for both timing columns, and N/A-run missions show `N/A` in both.
 
 ## Create the sheet
 
@@ -14,4 +14,4 @@ This setup creates two tabs in a Google Sheet:
 5. Select **FLL Tracker > Set up tracker tabs** and approve the requested access.
 6. Add the official mission IDs, names, and Yes/No point values to the **Missions** tab.
 
-The setup is safe to run again: it refreshes the formulas and formatting but does not clear mission or result rows. It expects the tab headers to remain unchanged.
+The setup is safe to run again: it refreshes formatting, adds the timing headers when missing, and does not clear mission or result rows. Existing millisecond values are converted to seconds when the timing headers are migrated; N/A-run missions are marked `N/A`, while other rows with no recorded timing remain blank.

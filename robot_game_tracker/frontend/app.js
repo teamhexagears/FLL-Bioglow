@@ -82,12 +82,13 @@ const defaultMissions = [
 })).sort(compareMissionOrder);
 
 const appConfig = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbzg5cw3cuGYDSEowOU-fI3qazObjULvlHziRb0S1_dfcusAppXm4IJw5HJrCbLDHXjb/exec'
+  apiUrl: 'https://script.google.com/macros/s/AKfycbyCoIUYHrSelajtNOYZnuQmY1FDijxKb94RhZSny8Xt92B7UpCCBWpp_RoemHKq9K4p/exec'
 }
 
 const state = {
   missions: [],
-  results: {}
+  results: {},
+  missionTimings: {}
 };
 
 const missionList = document.getElementById('missionList');
@@ -106,6 +107,7 @@ let timerRemaining = timerDuration;
 let timerDeadline = 0;
 let timerInterval = null;
 let saveInProgress = false;
+let lastMissionClickElapsedMs = null;
 
 function getMissionScore(mission, result) {
   const answer = result === true;
@@ -137,39 +139,46 @@ function setStatus(message, isError = false) {
 }
 
 function renderTimer() {
-  const totalSeconds = Math.ceil(timerRemaining / 1000);
+  const overtime = timerRemaining < 0;
+  const totalSeconds = Math.ceil(Math.abs(timerRemaining) / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  timerDisplayEl.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+  const timeText = `${minutes}:${String(seconds).padStart(2, '0')}`;
+  timerDisplayEl.textContent = overtime ? `-${timeText}` : timeText;
   timerDisplayEl.classList.toggle('timer-low', timerRemaining <= 30 * 1000);
-  startTimerButton.disabled = timerInterval !== null || timerRemaining === 0;
+  startTimerButton.disabled = timerInterval !== null;
   pauseTimerButton.disabled = timerInterval === null;
 }
 
 function updateTimer() {
-  timerRemaining = Math.max(0, timerDeadline - Date.now());
-  if (timerRemaining === 0) {
-    window.clearInterval(timerInterval);
-    timerInterval = null;
+  if (timerInterval === null) return;
+
+  timerRemaining = timerDeadline - Date.now();
+  if (timerRemaining <= 0) {
     timerStateEl.textContent = 'Time is up';
   }
   renderTimer();
 }
 
+function getTimerElapsedMs() {
+  const remainingMs = timerInterval === null ? timerRemaining : timerDeadline - Date.now();
+  return Math.max(0, Math.round(timerDuration - remainingMs));
+}
+
 function startTimer() {
-  if (timerInterval !== null || timerRemaining === 0) return;
+  if (timerInterval !== null) return;
   timerDeadline = Date.now() + timerRemaining;
-  timerStateEl.textContent = 'Running';
+  timerStateEl.textContent = timerRemaining < 0 ? 'Overtime' : 'Running';
   timerInterval = window.setInterval(updateTimer, 250);
   renderTimer();
 }
 
 function pauseTimer() {
   if (timerInterval === null) return;
-  timerRemaining = Math.max(0, timerDeadline - Date.now());
+  timerRemaining = timerDeadline - Date.now();
   window.clearInterval(timerInterval);
   timerInterval = null;
-  timerStateEl.textContent = timerRemaining === 0 ? 'Time is up' : 'Paused';
+  timerStateEl.textContent = 'Paused';
   renderTimer();
 }
 
@@ -177,6 +186,8 @@ function resetTimer() {
   window.clearInterval(timerInterval);
   timerInterval = null;
   timerRemaining = timerDuration;
+  state.missionTimings = {};
+  lastMissionClickElapsedMs = null;
   timerStateEl.textContent = 'Ready';
   renderTimer();
 }
@@ -258,14 +269,26 @@ function registerMissionHandlers() {
     }
 
     const missionId = button.dataset.missionId;
+    const mission = state.missions.find((item) => item.missionId === missionId);
     const value = button.dataset.answer === 'true';
+    const elapsedMs = getTimerElapsedMs();
+    const sincePreviousMs = lastMissionClickElapsedMs === null
+      ? elapsedMs
+      : Math.max(0, elapsedMs - lastMissionClickElapsedMs);
     state.results[missionId] = value;
+    const hasNoScheduledRun = String(mission && mission.runNumber || '').trim().toUpperCase() === 'N/A';
+    state.missionTimings[missionId] = hasNoScheduledRun
+      ? { elapsedMs: 'N/A', sincePreviousMs: 'N/A' }
+      : { elapsedMs, sincePreviousMs };
+    lastMissionClickElapsedMs = elapsedMs;
     renderMissions();
   });
 }
 
 function resetRun() {
   state.results = {};
+  state.missionTimings = {};
+  lastMissionClickElapsedMs = null;
   renderMissions();
   setStatus('Run reset');
 }
@@ -333,11 +356,18 @@ async function saveRun() {
   const payload = {
     results: selectedMissions.map((mission) => {
       const result = state.results[mission.missionId];
+      const timing = state.missionTimings[mission.missionId] || { elapsedMs: 0, sincePreviousMs: 0 };
       const row = {
         missionId: mission.missionId,
         missionName: mission.missionName,
         result: Boolean(result),
-        score: getMissionScore(mission, result)
+        score: getMissionScore(mission, result),
+        elapsedSeconds: timing.elapsedMs === 'N/A'
+          ? 'N/A'
+          : Number((timing.elapsedMs / 1000).toFixed(3)),
+        sincePreviousSeconds: timing.sincePreviousMs === 'N/A'
+          ? 'N/A'
+          : Number((timing.sincePreviousMs / 1000).toFixed(3))
       };
       console.log('Mission payload row:', row);
       return row;

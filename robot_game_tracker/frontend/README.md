@@ -4,8 +4,10 @@ This folder contains a lightweight front-end app for tracking FLL Bioglow missio
 
 ## What it does
 
-- Lets the user choose an attempt number and run number
+- Gets each mission's run number from the Missions tab
 - Shows each mission as a Yes/No selector
+- Records elapsed timer time and time since the previous mission selection in seconds, rounded to three decimal places
+- For the first timed mission, writes elapsed time to both timing columns; N/A-run missions have `N/A` in both
 - Looks up the resulting points from the mission table
 - Calculates the score for the current run
 - Saves the results to a Google Sheet using a Google Apps Script web app
@@ -20,6 +22,8 @@ Each row saved to the Google Sheet matches the required data layout:
 - Mission Name
 - Result (Boolean)
 - Score
+- Elapsed Time (seconds)
+- Since Previous Mission (seconds)
 
 ## Required Google Apps Script backend
 

@@ -7,7 +7,9 @@ const TRACKER_RESULT_HEADERS = [
   'Mission ID',
   'Mission Name',
   'Result',
-  'Score'
+  'Score',
+  'Elapsed Time (seconds)',
+  'Since Previous Mission (seconds)'
 ];
 const TRACKER_ROWS = 1000;
 
@@ -31,19 +33,52 @@ function getOrCreateTrackerSheet_(spreadsheet, name) {
 
 function ensureTrackerHeaders_(sheet, expectedHeaders) {
   const currentHeaders = sheet.getRange(1, 1, 1, expectedHeaders.length).getDisplayValues()[0];
-  const isEmpty = currentHeaders.every(function (value) { return value === ''; });
+  const hasLegacyTimingHeaders = sheet.getName() === TRACKER_RESULTS_SHEET &&
+    currentHeaders[6] === 'Elapsed Time (ms)' &&
+    currentHeaders[7] === 'Since Previous Mission (ms)';
 
-  if (isEmpty) {
-    sheet.getRange(1, 1, 1, expectedHeaders.length).setValues([expectedHeaders]);
+  if (hasLegacyTimingHeaders) {
+    migrateTimingValuesToSeconds_(sheet);
+    sheet.getRange(1, 7, 1, 2).setValues([expectedHeaders.slice(6, 8)]);
+    currentHeaders[6] = expectedHeaders[6];
+    currentHeaders[7] = expectedHeaders[7];
+  }
+
+  const firstBlankIndex = currentHeaders.findIndex(function (value) { return value === ''; });
+  const existingHeaderCount = firstBlankIndex === -1 ? expectedHeaders.length : firstBlankIndex;
+  const existingHeadersMatch = expectedHeaders.slice(0, existingHeaderCount).every(function (header, index) {
+    return currentHeaders[index] === header;
+  });
+  const remainingHeadersAreBlank = currentHeaders.slice(existingHeaderCount).every(function (value) {
+    return value === '';
+  });
+
+  if (!existingHeadersMatch || !remainingHeadersAreBlank) {
+    throw new Error('The headers in "' + sheet.getName() + '" do not match the tracker layout. No data was changed.');
+  }
+
+  if (existingHeaderCount < expectedHeaders.length) {
+    sheet.getRange(1, existingHeaderCount + 1, 1, expectedHeaders.length - existingHeaderCount)
+      .setValues([expectedHeaders.slice(existingHeaderCount)]);
+  }
+}
+
+function migrateTimingValuesToSeconds_(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow <= 1) {
     return;
   }
 
-  const matches = expectedHeaders.every(function (header, index) {
-    return currentHeaders[index] === header;
+  const range = sheet.getRange(2, 7, lastRow - 1, 2);
+  const values = range.getValues().map(function (row) {
+    return row.map(function (value) {
+      const milliseconds = Number(value);
+      return value === '' || value === null || !Number.isFinite(milliseconds)
+        ? value
+        : Math.round(milliseconds) / 1000;
+    });
   });
-  if (!matches) {
-    throw new Error('The headers in "' + sheet.getName() + '" do not match the tracker layout. No data was changed.');
-  }
+  range.setValues(values);
 }
 
 function setupMissionsTab_(sheet) {
@@ -66,12 +101,15 @@ function setupResultsTab_(sheet, missionsSheet) {
   sheet.setColumnWidth(4, 240);
   sheet.setColumnWidth(5, 100);
   sheet.setColumnWidth(6, 90);
+  sheet.setColumnWidth(7, 135);
+  sheet.setColumnWidth(8, 205);
 
   const dataRows = sheet.getRange(2, 1, TRACKER_ROWS, TRACKER_RESULT_HEADERS.length);
   dataRows.setVerticalAlignment('middle');
   sheet.getRange(2, 1, TRACKER_ROWS, 2).setNumberFormat('0');
   sheet.getRange(2, 3, TRACKER_ROWS, 1).setNumberFormat('@');
   sheet.getRange(2, 6, TRACKER_ROWS, 1).setNumberFormat('0');
+  sheet.getRange(2, 7, TRACKER_ROWS, 2).setNumberFormat('0.000');
 
   const missionIdRange = sheet.getRange(2, 3, TRACKER_ROWS, 1);
   const missionIdRule = SpreadsheetApp.newDataValidation()
