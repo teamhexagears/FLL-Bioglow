@@ -7,9 +7,7 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r3(robot):
-    run_task(robot.curve_move(radius=800, distance=86, speed=300))
-    robot.turn(-75)                                                               
-    robot.right_attachment_turn(-90)
+
     # Reset and move
     #run_task(robot.both_attachment_reset(60, left_power=0, right_power=50))
     #robot.left_attachment_turn(10)
@@ -50,4 +48,11 @@ def r3(robot):
 
     # code starts here:
 
-    #robot.curve_move(50, 20)
+    run_task(robot.curve_move(radius=700, distance=74, speed=300))
+    robot.turn(-59)   
+    #robot.right_attachment_turn(-20, 2000)                                                     
+    robot.move(8.5)
+    robot.right_attachment_turn(-70, 2000)
+    robot.move(-11)
+    robot.move(distance=30, speed=1000)
+    robot.move(distance=-25, speed=100)

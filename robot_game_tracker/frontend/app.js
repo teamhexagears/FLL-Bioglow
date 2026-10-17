@@ -106,7 +106,6 @@ const timerDuration = 2 * 60 * 1000 + 30 * 1000;
 let timerRemaining = timerDuration;
 let timerDeadline = 0;
 let timerInterval = null;
-let timerHasStarted = false;
 let saveInProgress = false;
 let lastMissionClickElapsedMs = null;
 
@@ -168,7 +167,6 @@ function getTimerElapsedMs() {
 
 function startTimer() {
   if (timerInterval !== null) return;
-  timerHasStarted = true;
   timerDeadline = Date.now() + timerRemaining;
   timerStateEl.textContent = timerRemaining < 0 ? 'Overtime' : 'Running';
   timerInterval = window.setInterval(updateTimer, 250);
@@ -188,7 +186,6 @@ function resetTimer() {
   window.clearInterval(timerInterval);
   timerInterval = null;
   timerRemaining = timerDuration;
-  timerHasStarted = false;
   state.missionTimings = {};
   lastMissionClickElapsedMs = null;
   timerStateEl.textContent = 'Ready';
@@ -271,7 +268,7 @@ function registerMissionHandlers() {
       return;
     }
 
-    if (!timerHasStarted) {
+    if (timerInterval === null) {
       window.alert('click the start button to start the timer before clicking and apologize to your team members!!!!!');
       return;
     }
