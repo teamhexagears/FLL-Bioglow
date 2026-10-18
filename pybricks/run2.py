@@ -1,9 +1,6 @@
 # Team Red - M2 + M5
 # Starting position: second thick line from the right
 
-if __name__ == "__main__":
-    import main
-
 from pybricks.tools import run_task
 
 def r2(robot):
@@ -11,11 +8,16 @@ def r2(robot):
     robot.left_attachment_turn(-70) 
     robot.move(4)
     robot.turn(48)
-    robot.move(43)
+    robot.move(45)
     robot.left_attachment_turn(angle=-90, speed=500)
-    run_task (robot.both_attachment_turn( left_angle=-140, right_angle=-0, distance=-2))
-    robot.turn (-60)
-    run_task(robot.both_attachment_turn(distance=6, right_angle=-57, move_speed=300 ))
-    robot.turn(5)
-    robot.move(3)
-    robot.right_attachment_turn(-500, 400)
+    run_task (robot.both_attachment_turn( left_angle=-140, right_angle=-0, distance=-3.5))
+    robot.turn(-40)
+    robot.move(-25)
+    robot.move(80)
+    robot.right_attachment_turn(-225, speed=2500)
+    robot.right_attachment_turn(225, speed=2500)
+    robot.move(2.5)
+    robot.right_attachment_turn(-225, speed=2500)
+    robot.move(-80)
+if __name__ == "__main__":
+    import main
