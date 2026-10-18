@@ -1,5 +1,5 @@
 # Team Red - M2 + M5
-# Starting position: 8th block from left
+# Starting position: second thick line from the right
 
 if __name__ == "__main__":
     import main

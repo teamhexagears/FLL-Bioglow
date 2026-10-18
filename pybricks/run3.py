@@ -1,5 +1,5 @@
 # Team Red - M8 + M9 + M10
-# starting position=3rd square from the right (thick line)
+# starting position=4th square from the left
 
 if __name__ == "__main__":
     import main
@@ -49,10 +49,14 @@ def r3(robot):
     # code starts here:
 
     run_task(robot.curve_move(radius=700, distance=74, speed=300))
-    robot.turn(-59)   
-    #robot.right_attachment_turn(-20, 2000)                                                     
+    robot.turn(-59)
+    robot.right_attachment_turn(-37.5, 6000)
     robot.move(8.5)
-    robot.right_attachment_turn(-70, 2000)
+    robot.right_attachment_turn(-67.5, 6000)
+
     robot.move(-11)
     robot.move(distance=30, speed=1000)
+    robot.thrust(-5,711)
+    robot.thrust(5,711)
     robot.move(distance=-25, speed=100)
+    run_task(robot.curve_move(radius=-700, distance=-74, speed=300))
