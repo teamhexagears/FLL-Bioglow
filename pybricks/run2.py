@@ -12,12 +12,12 @@ def r2(robot):
     robot.left_attachment_turn(angle=-90, speed=500)
     run_task (robot.both_attachment_turn( left_angle=-140, right_angle=-0, distance=-3.5))
     robot.turn(-40)
-    robot.move(-25)
+    robot.move(-20)
     robot.move(80)
-    robot.right_attachment_turn(-225, speed=2500)
-    robot.right_attachment_turn(225, speed=2500)
+    robot.right_attachment_turn(-225, speed=2250)
+    robot.right_attachment_turn(225, speed=2250)
     robot.move(2.5)
-    robot.right_attachment_turn(-225, speed=2500)
+    robot.right_attachment_turn(-225, speed=2250)
     robot.move(-80)
 if __name__ == "__main__":
     import main
