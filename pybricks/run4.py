@@ -1,15 +1,16 @@
 # Team Green - M15
-# Starting position??
+# Starting position    
 
 if __name__ == "__main__":
     import main
-# team green        4 from the right
+# team green        3 from the right
 from pybricks.tools import run_task
 
 def r4(robot):
     robot.move(3)
     robot.turn(60)
-    run_task(robot.both_attachment_turn(right_angle=65, left_angle=0, right_speed=100, left_speed=0, distance=7.5, move_speed=350))
+    run_task(robot.both_attachment_turn(right_angle=70, left_angle=0, right_speed=100, left_speed=0, distance=9, move_speed=350))
+    robot.turn(20)
     robot.right_attachment_turn(angle=-80, speed=500)
     robot.right_attachment_turn(angle=180, speed=500)
     robot.right_attachment_turn(angle=-80, speed=500)

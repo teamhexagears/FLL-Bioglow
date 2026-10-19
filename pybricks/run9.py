@@ -12,7 +12,7 @@ def r9(robot):
     robot.thrust(distance=7, speed=800)
     robot.right_attachment_turn(-120)
     robot.thrust(distance=-7, speed=800)
-    for i in range(3):
+    while(True):
         robot.thrust(distance=8, speed=800)
         robot.turn(15)
         robot.turn(-30)
