@@ -3,7 +3,7 @@ Code for FLL BIoglow
 
 | Function name | Parameters | Description |
 | -------- | -------- | -------- |
-| `robot.move` | `distance`, `speed=450` | `distance` is the distance to travel; `speed` controls driving speed |
+| `robot.move` | `distance`, `speed=450` | `distance` is the distance to travel; `speed` controls driving speed, max speed is 1000 |
 | `robot.thrust` | `distance`, `speed=750` | `distance` is the distance to travel; `speed` controls driving speed, same as move, but no wait|
 | `robot.parallel_move` | `distance`, `speed=450` | *this is for multitasking* `distance` is the distance to travel; `speed` controls driving speed |
 | `robot.turn` | `angle`, `speed=150` | `angle` is the turning angle in degrees; `speed` controls turning speed |
