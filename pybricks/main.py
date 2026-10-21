@@ -8,13 +8,14 @@ from run6 import r6
 from run7 import r7
 from run8 import r8
 from run9 import r9
+from run35 import r35
 from robot import Robot
 from pybricks.tools import multitask, run_task, wait, hub_menu
 from pybricks.parameters import Color
 
 robot = Robot()
 
-original = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+original = [1, 2, 3, 35, 4, 5, 6, 7, 8, 9, 10]
 options = original
 while True:
     # select list
@@ -27,6 +28,8 @@ while True:
         r2(robot)
     elif selected == 3:
         r3(robot)
+    elif selected == 35:
+        r35(robot)
     elif selected == 4:
         r4(robot)
     elif selected == 5:
