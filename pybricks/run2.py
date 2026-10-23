@@ -1,3 +1,6 @@
+# Team Red M2 + M5
+# Driving base starting  position: Three squares from the right
+
 if __name__ == "__main__":
     import main
 
