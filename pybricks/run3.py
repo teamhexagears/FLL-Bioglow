@@ -9,18 +9,21 @@ from pybricks.tools import run_task
 
 def r3(robot):
     # Reset 
-    run_task(robot.both_attachment_reset(distance=0, left_power=0, right_power=40))
-
+    #run_task(robot.both_attachment_reset(distance=0, left_power=0, right_power=60))
     # move to tree
-    run_task(robot.curve_move(radius=700, distance=74, speed=300))
-    robot.turn(-59)
+    run_task(robot.curve_move_reset(radius=700, distance=61, speed=500, right_power=60))
+    robot.right_attachment_turn(-250, 6000)
+    robot.turn(-170)
+    robot.move(-15)
+    robot.turn(122)
 
     # vine
     #robot.right_attachment_turn(-100, 6000)
-    robot.move(8.5)
-    robot.right_attachment_turn(-100, 6000)
-    robot.move(-11)
-    robot.right_attachment_turn(-90, 6000)
+    run_task(robot.right_attachment_reset(power=60))
+    robot.move(6)
+    robot.right_attachment_turn(-110, 6000)
+    robot.move(-9)
+    robot.right_attachment_turn(-200, 6000)
 
     # platform
     robot.move(distance=21, speed=1000)
@@ -31,4 +34,4 @@ def r3(robot):
     robot.turn(10)
     robot.move(distance=-5, speed=100)
     robot.turn(-140)
-    robot.move(distance=75, speed=1000)
+    robot.move(distance=70, speed=1000)
