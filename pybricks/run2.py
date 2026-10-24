@@ -7,7 +7,7 @@ from pybricks.tools import run_task, wait
 
 
 def r2(robot):
-    run_task(robot.both_attachment_reset(left_power=0, right_power=-50, distance=46, move_speed=350))
+    run_task(robot.both_attachment_reset(left_power=0, right_power=-40, distance=46, move_speed=350))
     robot.turn(-35)
     run_task(robot.both_attachment_turn(right_angle=150, right_speed=1000, distance=70, move_speed=1000))
     # v1
