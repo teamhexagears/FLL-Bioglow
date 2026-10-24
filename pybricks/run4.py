@@ -1,5 +1,5 @@
 # Team Red - M8 + M9 + M10
-# starting position=4th square from the left
+# starting position=3rd square from the left
 
 if __name__ == "__main__":
     import main
@@ -13,16 +13,16 @@ def r4(robot):
     # move to tree
     run_task(robot.curve_move_reset(radius=700, distance=61, speed=500, right_power=60))
     robot.right_attachment_turn(-250, 6000)
-    robot.turn(-170)
-    robot.move(-15)
-    robot.turn(122)
+    robot.turn(-170, 800)
+    robot.move(-15, 1000)
+    robot.turn(122, 800)
 
     # vine
     #robot.right_attachment_turn(-100, 6000)
     run_task(robot.right_attachment_reset(power=60))
-    robot.move(6)
+    robot.move(6, 1000)
     robot.right_attachment_turn(-110, 6000)
-    robot.move(-9)
+    robot.move(-9, 1000)
     robot.right_attachment_turn(-200, 6000)
 
     # platform
@@ -31,8 +31,8 @@ def r4(robot):
     #robot.thrust(5,711)
     robot.move(-10, speed=50)
     robot.turn(angle=-10, speed=50)
-    robot.turn(10)
-    robot.move(distance=-5, speed=100)
-    robot.turn(-140)
-    robot.move(distance=70, speed=1000)
+    robot.turn(10, 800)
+    robot.move(distance=-5, speed=1000)
+    robot.turn(-140, 800)
+    robot.move(distance=60, speed=1000)
     robot.stop()
