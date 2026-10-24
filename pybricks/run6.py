@@ -32,4 +32,5 @@ def r6(robot):
   #robot.left_attachment_turn(angle=50, speed=80)
   #robot.move(-50)
   robot.move(43)
+  robot.stop()
   

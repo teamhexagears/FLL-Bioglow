@@ -39,3 +39,4 @@ def r5(robot):
     # back to Blue base
     robot.turn(30)
     robot.move(75)
+    robot.stop()

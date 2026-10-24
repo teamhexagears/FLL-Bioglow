@@ -35,3 +35,4 @@ def r4(robot):
     robot.move(distance=-5, speed=100)
     robot.turn(-140)
     robot.move(distance=70, speed=1000)
+    robot.stop()

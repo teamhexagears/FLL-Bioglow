@@ -34,3 +34,4 @@ def r8(robot):
     run_task(robot.curve_move(speed=300, radius=730, distance=60))
     #robot.turn(15)
     #robot.turn(45)
+    robot.stop()

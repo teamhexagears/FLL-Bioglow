@@ -21,3 +21,4 @@ def r2(robot):
     robot.move(-20)
     robot.turn(30)
     robot.move(-70)
+    robot.stop()

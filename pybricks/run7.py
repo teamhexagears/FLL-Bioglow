@@ -17,4 +17,4 @@ def r7(robot):
     robot.move(-11)
     robot.turn(90)
     robot.move(distance=95, speed=700)
-    
+    robot.stop()

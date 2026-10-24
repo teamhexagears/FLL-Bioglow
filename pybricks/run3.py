@@ -20,3 +20,4 @@ def r3(robot):
     robot.move(47)
     robot.left_attachment_turn(angle=-50, speed=500)
     run_task(robot.both_attachment_turn( left_angle=-85, right_angle=-0, distance=-45))
+    robot.stop()
