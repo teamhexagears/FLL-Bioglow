@@ -22,8 +22,7 @@ while True:
 
     robot.hub.light.off()
     if selected == 1:
-        #r1(robot)
-        print("A")
+        r1(robot)
     elif selected == 2:
         r2(robot)
     elif selected == 3:
