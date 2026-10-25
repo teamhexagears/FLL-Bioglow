@@ -207,13 +207,13 @@ class Robot:
             self.parallel_right_attachment_turn(angle=right_angle)
         )
 
-    async def curve_move_reset(self, speed=300, radius=600, distance=0, left_power=0, right_power=0):
+    async def curve_move_reset(self, speed=300, radius=600, distance=0, left_power=0, right_power=0, left_speed=50, right_speed=50):
         self.drive_base.reset(0,0)
         self.drive_base.settings(speed)
         await multitask(
             self.drive_base.arc(radius=radius, distance=distance*10),
-            self.left_attachment_reset(power=left_power),
-            self.right_attachment_reset(power=right_power)
+            self.left_attachment_reset(power=left_power, speed=left_speed),
+            self.right_attachment_reset(power=right_power, speed=right_speed)
         )
 
     async def left_attachment_while_move(self, left_angle=0, left_speed=100, distance=0, move_speed=450):
@@ -244,18 +244,14 @@ class Robot:
     def left_attachment_turn(self, angle, speed=300):
         self.left_attachment.run_angle(speed, angle)
 
-    async def right_attachment_reset(self, power=150):
+    async def right_attachment_reset(self, power=150, speed=150):
         if power < 0:
-            speed = -700
-        else:
-            speed = 700
+            speed = speed*-1
         await self.right_attachment.run_until_stalled(speed=speed, duty_limit=abs(power))
 
-    async def left_attachment_reset(self, power=150):
+    async def left_attachment_reset(self, power=150, speed=150):
         if power < 0:
-            speed = -700
-        else:
-            speed = 700
+            speed = speed*-1
         await self.left_attachment.run_until_stalled(speed=speed, duty_limit=abs(power))
 
     async def both_attachment_turn(self,right_angle=0, left_angle=0, right_speed=100, left_speed=100, distance=0, move_speed=450):
