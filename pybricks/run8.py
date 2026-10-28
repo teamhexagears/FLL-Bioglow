@@ -8,14 +8,17 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r8(robot):
+    run_task(robot.both_attachment_turn(left_angle=-320, right_angle=-320, left_speed=1000, right_speed=800))
+    return
     # Go to animal platform
     run_task(robot.both_attachment_reset(distance=75, move_speed=1000, left_power=0, right_power=50))
     robot.turn(50, speed=800)
     robot.move(7.5,speed=1000)
 
-    # Dspeed drop animal
-    robot.right_attachment_turn(angle=-310, speed=255)
-    robot.right_attachment_turn(angle=305, speed=250)
+    # drop animal
+
+    run_task(robot.both_attachment_turn(left_angle=-320, right_angle=-320, left_speed=1000, right_speed=800))
+    run_task(robot.both_attachment_turn(left_angle=320, right_angle=320, left_speed=1000, right_speed=800))
 
     # Go to ants
     robot.move(-5,speed=1000)
