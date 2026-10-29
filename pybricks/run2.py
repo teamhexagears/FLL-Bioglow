@@ -9,7 +9,7 @@ from pybricks.tools import run_task
 #Three squares from the right
 
 def r2(robot):
-    robot.move(77, 1000)
+    robot.move(77.5, 1000)
     robot.right_attachment_turn(-225, speed=3000)
     robot.right_attachment_turn(225, speed=3000)
     robot.move(2.5, 1000)
