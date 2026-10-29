@@ -26,11 +26,11 @@ def r8(robot):
     #run_task(robot.both_attachment_turn(left_angle=320, right_angle=320, left_speed=1000, right_speed=800))
     # new drop animal
     run_task(robot.both_attachment_turn(left_angle=-500, right_angle=-320, left_speed=1500, right_speed=500))
-    return
+    run_task(robot.right_attachment_turn(angle=320, speed=500))
 
     # Go to ants
     robot.move(-5,speed=1000)
-    run_task(robot.curve_move(speed=1000, radius=-330, distance=-45))
+    run_task(robot.curve_move(speed=500, radius=-330, distance=-45))
     #robot.turn(30)
     #robot.move(-37)
     robot.turn(-80, speed=800)
