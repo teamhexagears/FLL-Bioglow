@@ -9,13 +9,13 @@ function normalizeMission(mission) {
 }
 
 const defaultRunNumbers = {
-  m0: 'N/A', m1a: 5, m1b: 5, m2a: 3, m2b: 3, m2c: 3,
-  m3a: 1, m3b: 1, m5a: 3, m5b: 3,
-  m6a: 8, m6b: 8, m6c: 8, m6d: 8, m7a: 7, m7b: 7,
-  m8: 4, m9a: 4, m9b: 4, m9c: 4, m10a: 'N/A', m10b: 'N/A',
-  m11a: 5, m11b: 8, m12a: 6, m12b: 7, m12c: 6, m13: 8,
-  m14a: 9, m14b: 9, m14c: 9, m14d: 9, m14e: 9, m14f: 9, m14g: 9, m14h: 9,
-  m15a: 2, m15b: 2, m15c: 2,
+  m0: 'N/A', m2a: 2, m2b: 2, m2c: 2,
+  m3a: 3, m3b: 3, m5a: 2, m5b: 2,
+  m6a: 5, m6b: 5, m6c: 5, m6d: 5, m7a: 5, m7b: 5,
+  m8: 1, m9a: 1, m9b: 1, m9c: 1, m10a: 'N/A', m10b: 'N/A',
+  m11a: 4, m11b: 4, m12a: 5, m12b: 5, m12c: 6, m13: 5,
+  m14a: 7, m14b: 7, m14c: 7, m14d: 7, m14e: 7, m14f: 7, m14g: 7, m14h: 7,
+  m15a: 4, m15b: 4, m15c: 4,
   pt1: 'N/A', pt2: 'N/A', pt3: 'N/A', pt4: 'N/A', pt5: 'N/A'
 };
 
@@ -33,8 +33,6 @@ function compareMissionOrder(firstMission, secondMission) {
 
 const defaultMissions = [
   { missionId: 'm0', missionName: 'does all your attatchments fit in the launch area?', noPoints: 0, yesPoints: 20 },
-  { missionId: 'm1a', missionName: 'drone is up?', noPoints: 0, yesPoints: 20 },
-  { missionId: 'm1b', missionName: 'drone is in the flap, and is the flap up?', noPoints: 0, yesPoints: 10 },
   { missionId: 'm2a', missionName: 'first seed down?', noPoints: 0, yesPoints: 10 },
   { missionId: 'm2b', missionName: 'second seed down?', noPoints: 0, yesPoints: 10 },
   { missionId: 'm2c', missionName: 'third seed down?', noPoints: 0, yesPoints: 10 },
