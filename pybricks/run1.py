@@ -25,13 +25,9 @@ def r1(robot):
     robot.right_attachment_turn(-120, 6000)
 
 
-    robot.move(-8, speed=50)
-
-    # new right hand down by bear
-    robot.right_attachment_turn(110, 6000)
-
     # Go home
-    robot.move(distance=-5, speed=1000)
+    robot.move(distance=-13, speed=1000)
+    robot.right_attachment_turn(-170, 6000)
     robot.turn(-140, 800)
     robot.move(distance=60, speed=1000)
     robot.stop()
