@@ -198,13 +198,13 @@ class Robot:
         self.drive_base.stop()
         
 
-    async def curve_move(self, speed=300, radius=600, distance=100, left_angle=0, right_angle=0):
+    async def curve_move(self, speed=300, radius=600, distance=100, left_angle=0, right_angle=0, left_speed=100, right_speed=100):
         self.drive_base.reset(0,0)
         self.drive_base.settings(speed)
         await multitask(
             self.drive_base.arc(radius=radius, distance=distance*10),
-            self.parallel_left_attachment_turn(angle=left_angle),
-            self.parallel_right_attachment_turn(angle=right_angle)
+            self.parallel_left_attachment_turn(angle=left_angle, speed=left_speed),
+            self.parallel_right_attachment_turn(angle=right_angle, speed=right_speed)
         )
 
     async def curve_move_reset(self, speed=300, radius=600, distance=0, left_power=0, right_power=0, left_speed=50, right_speed=50):
@@ -261,9 +261,9 @@ class Robot:
             self.parallel_move(distance, move_speed)
         )
 
-    async def both_attachment_reset(self, distance, move_speed=450, left_power=150, right_power=150):
+    async def both_attachment_reset(self, distance, move_speed=450, left_power=150, right_power=150, left_speed=100, right_speed=100):
         await multitask(
-            self.left_attachment_reset(power=left_power),
-            self.right_attachment_reset(power=right_power),
+            self.left_attachment_reset(power=left_power, speed=left_speed),
+            self.right_attachment_reset(power=right_power, speed=right_speed),
             self.parallel_move(distance, move_speed)
         )
