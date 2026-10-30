@@ -8,9 +8,7 @@ if __name__ == "__main__":
 from pybricks.tools import run_task
 
 def r1(robot):
-    # Reset 
-    #run_task(robot.both_attachment_reset(distance=0, left_power=0, right_power=60))
-    # move to tree
+    # Reset and move to tree
     run_task(robot.curve_move_reset(radius=700, distance=61, speed=500, right_power=60, right_speed=500))
     robot.right_attachment_turn(-250, 6000)
     robot.turn(-170, 800)
@@ -18,27 +16,21 @@ def r1(robot):
     robot.turn(122, 800)
 
     # vine
-    #robot.right_attachment_turn(-100, 6000)
-    run_task(robot.right_attachment_reset(power=60))
-    # robot.move(6, 1000)
-    #robot.right_attachment_turn(-110, 6000)
-    #robot.move(-9, 1000)
-    #robot.right_attachment_turn(-200, 6000)
+    run_task(robot.right_attachment_reset(power=50, speed=6000))
 
     # platform
     robot.move(distance=21, speed=1000)
+
     #new vine by bear
     robot.right_attachment_turn(-120, 6000)
 
 
-    #robot.thrust(-5,711)
-    #robot.thrust(5,711)
-    robot.move(-10, speed=50)
+    robot.move(-8, speed=50)
 
-    #new right hand down by bear
+    # new right hand down by bear
     robot.right_attachment_turn(110, 6000)
-    robot.turn(angle=-10, speed=50)
-    robot.turn(10, 800)
+
+    # Go home
     robot.move(distance=-5, speed=1000)
     robot.turn(-140, 800)
     robot.move(distance=60, speed=1000)

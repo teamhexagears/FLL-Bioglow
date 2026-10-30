@@ -5,22 +5,20 @@ from run3 import r3
 from run4 import r4
 from run5 import r5
 from run6 import r6
-from run7 import r7
-from run8 import r8
-from run9 import r9
 from robot import Robot
 from pybricks.tools import multitask, run_task, wait, hub_menu
 from pybricks.parameters import Color
 
 robot = Robot()
 
-original = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+original = [1, 2, 3, 4, 5, 6]
 options = original
 while True:
     # select list
     selected = hub_menu(*options)
 
-    robot.hub.light.off()
+    robot.hub.light.on(Color.RED)
+    
     if selected == 1:
         r1(robot)
     elif selected == 2:
@@ -35,12 +33,6 @@ while True:
         r5(robot)
     elif selected == 6:
         r6(robot)
-    elif selected == 7:
-        r7(robot)
-    elif selected == 8:
-        r8(robot)
-    elif selected == 9:
-        r9(robot)
 
     robot.hub.light.on(Color.GREEN)
     
