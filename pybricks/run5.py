@@ -18,9 +18,9 @@ def r5(robot):
 
     # drop animal
     run_task(robot.both_attachment_turn(left_angle=-500, right_angle=-300, left_speed=1500, right_speed=500))
-    run_task(robot.right_attachment_turn(angle=100, speed=500))
+    run_task(robot.right_attachment_turn(angle=75, speed=500))
     wait(200)
-    run_task(robot.right_attachment_turn(angle=200, speed=500))
+    run_task(robot.right_attachment_turn(angle=225, speed=500))
 
     # Go to ants
     robot.move(-4,speed=1000)

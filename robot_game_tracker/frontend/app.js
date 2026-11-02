@@ -13,8 +13,8 @@ const defaultRunNumbers = {
   m3a: 3, m3b: 3, m5a: 2, m5b: 2,
   m6a: 5, m6b: 5, m6c: 5, m6d: 5, m7a: 5, m7b: 5,
   m8: 1, m9a: 1, m9b: 1, m9c: 1, m10a: 'N/A', m10b: 'N/A',
-  m11a: 4, m11b: 4, m12a: 5, m12b: 5, m12c: 6, m13: 5,
-  m14a: 7, m14b: 7, m14c: 7, m14d: 7, m14e: 7, m14f: 7, m14g: 7, m14h: 7,
+  m11a: 4, m11b: 4,  m12b: 5,  m13: 5,
+  m14a: 6, m14b: 6, m14c: 6, m14d: 6, m14e: 6, m14f: 6, m14g: 6, m14h: 6,
   m15a: 4, m15b: 4, m15c: 4,
   pt1: 'N/A', pt2: 'N/A', pt3: 'N/A', pt4: 'N/A', pt5: 'N/A'
 };
