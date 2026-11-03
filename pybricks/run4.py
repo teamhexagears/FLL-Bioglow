@@ -10,7 +10,7 @@ def r4(robot):
     # Move to building
     run_task(robot.both_attachment_reset(left_power=50, right_power=-40, distance=46, move_speed=1000))
     robot.turn(-35, 800)
-    run_task(robot.both_attachment_turn(right_angle=135, right_speed=1000, distance=60, move_speed=1000))
+    run_task(robot.both_attachment_turn(right_angle=135, right_speed=1000, distance=55, move_speed=800))
 
     # Lift Roof
     robot.right_attachment_turn(angle=-90, speed=1000)
@@ -19,9 +19,9 @@ def r4(robot):
     robot.right_attachment_turn(angle=-110, speed=250)
 
     # Go to Window to the Past (M11)
-    robot.move(-20,1000)
+    robot.move(-21,1000)
     robot.turn(38,800)
-    robot.move(58.5,1000)
+    robot.move(59,1000)
 
     # Get seed
     robot.left_attachment_turn(-155)

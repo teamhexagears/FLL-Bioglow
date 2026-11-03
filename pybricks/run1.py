@@ -24,6 +24,9 @@ def r1(robot):
     #new vine by bear
     robot.right_attachment_turn(-120, 6000)
 
+    # shake tree
+    robot.turn(15, 800)
+    robot.turn(-15, 800)
 
     # Go home
     robot.move(distance=-13, speed=1000)
