@@ -49,9 +49,8 @@ def r5(robot):
 
     # Go Window of the Past
     robot.move(-9,speed=1000)
-    robot.turn(30, speed=800)
+    robot.turn(70, speed=800)
     #run_task(robot.right_attachment_turn(angle=-250, speed=1500))
-    robot.turn(40, speed=800)
 
     # Hit and go home
     run_task(robot.curve_move(speed=300, radius=800, distance=83))
